@@ -112,7 +112,7 @@ exhaust_bic <- function(cand, sub_sums, strength, log_penalty, n, auc, min_cost)
     .Call(`_mosum_exhaust_bic`, cand, sub_sums, strength, log_penalty, n, auc, min_cost)
 }
 
-#' equivalent to zoo::rollsum(x, k=G, fill=NA, align="left"), 
+#' equivalent to rollsum(x, k=G, fill=NA, align="left") in the package zoo, 
 #' but optimized for speed
 #' @keywords internal
 rolling_sum <- function(x, G) {

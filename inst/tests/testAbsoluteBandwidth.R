@@ -12,10 +12,11 @@ test_that("MOSUM with relative and absolute symmetric bandwidths is consistent",
     }
     m.rel <- mosum(x, G.rel)
     m.abs <- mosum(x, G.abs)
-    expect_equal(m.rel$G, m.abs$G)
+    expect_equal(m.rel$G.left, m.abs$G.left)
     expect_equal(m.rel$stat, m.abs$stat)
   }
 })
+
 test_that("MOSUM with relative and absolute asymmetric bandwidths is consistent", {
   for (i in seq_len(N_TEST)) {
     n <- floor(runif(1, 50, 1000))
@@ -34,19 +35,20 @@ test_that("MOSUM with relative and absolute asymmetric bandwidths is consistent"
     }
     m.rel <- mosum(x, G.left.rel, G.right.rel)
     m.abs <- mosum(x, G.left.abs, G.right.abs)
-    expect_equal(m.rel$G, m.abs$G)
+    expect_equal(m.rel$G.left, m.abs$G.left)
     expect_equal(m.rel$G.right, m.abs$G.right)
     expect_equal(m.rel$stat, m.abs$stat)
   }
 })
+
 test_that("MOSUM CPTS with relative and absolute bandwidths is consistent", {
   for (i in seq_len(N_TEST)) {
 
-    ts <- list(piecewiseStationary_timeSeries(model="blocks"),
-               piecewiseStationary_timeSeries(model="fms"),
-               piecewiseStationary_timeSeries(model="mix"),
-               piecewiseStationary_timeSeries(model="stairs10"),
-               piecewiseStationary_timeSeries(model="teeth10"))
+    ts <- list(testData(model="blocks"),
+               testData(model="fms"),
+               testData(model="mix"),
+               testData(model="stairs10"),
+               testData(model="teeth10"))
     for (x in ts) {
       n <- length(x)
       G.left.rel <- runif(1, 0, 0.45)
@@ -61,8 +63,8 @@ test_that("MOSUM CPTS with relative and absolute bandwidths is consistent", {
         G.right.rel <- runif(1, 0, 0.45)
         G.right.abs <- floor(n * G.right.rel)
       }
-      m.rel <- mosum.cpts(x, G.left.rel, G.right.rel)
-      m.abs <- mosum.cpts(x, G.left.abs, G.right.abs)
+      m.rel <- mosum(x, G.left.rel, G.right.rel)
+      m.abs <- mosum(x, G.left.abs, G.right.abs)
       expect_equal(m.rel$cpts, m.abs$cpts)
     }
   }
@@ -70,11 +72,11 @@ test_that("MOSUM CPTS with relative and absolute bandwidths is consistent", {
 test_that("Multiscale CPTS bottom up with relative and absolute bandwidths is consistent", {
   for (i in seq_len(N_TEST)) {
 
-    ts <- list(piecewiseStationary_timeSeries(model="blocks"),
-               piecewiseStationary_timeSeries(model="fms"),
-               piecewiseStationary_timeSeries(model="mix"),
-               piecewiseStationary_timeSeries(model="stairs10"),
-               piecewiseStationary_timeSeries(model="teeth10"))
+    ts <- list(testData(model="blocks"),
+               testData(model="fms"),
+               testData(model="mix"),
+               testData(model="stairs10"),
+               testData(model="teeth10"))
     for (x in ts) {
       n <- length(x)
       G.left.rel <- runif(5, 0, 0.45)
@@ -83,10 +85,8 @@ test_that("Multiscale CPTS bottom up with relative and absolute bandwidths is co
         G.left.rel <- runif(5, 0, 0.45)
         G.left.abs <- floor(n * G.left.rel)
       }
-      G.rel <- multiscale.grid(G.left.rel, G.left.rel, method="concatenate", max.unbalance=Inf)
-      G.abs <- multiscale.grid(G.left.abs, G.left.abs, method="concatenate", max.unbalance=Inf)
-      m.rel <- multiscale.bottomUp.cpts(x, G.rel)
-      m.abs <- multiscale.bottomUp.cpts(x, G.abs)
+      m.rel <- multiscale.bottomUp(x, G.left.rel)
+      m.abs <- multiscale.bottomUp(x, G.left.abs)
       expect_equal(m.rel$cpts, m.abs$cpts)
       expect_equal(m.rel$pooled.cpts, m.abs$pooled.cpts)
     }
@@ -94,11 +94,11 @@ test_that("Multiscale CPTS bottom up with relative and absolute bandwidths is co
 })
 test_that("Multiscale CPTS with relative and absolute bandwidths is consistent", {
   for (i in seq_len(N_TEST)) {
-    ts <- list(piecewiseStationary_timeSeries(model="blocks"),
-               piecewiseStationary_timeSeries(model="fms"),
-               piecewiseStationary_timeSeries(model="mix"),
-               piecewiseStationary_timeSeries(model="stairs10"),
-               piecewiseStationary_timeSeries(model="teeth10"))
+    ts <- list(testData(model="blocks"),
+               testData(model="fms"),
+               testData(model="mix"),
+               testData(model="stairs10"),
+               testData(model="teeth10"))
     for (x in ts) {
       n <- length(x)
       G.left.rel <- runif(5, 0, 0.45)
@@ -107,18 +107,11 @@ test_that("Multiscale CPTS with relative and absolute bandwidths is consistent",
         G.left.rel <- runif(5, 0, 0.45)
         G.left.abs <- floor(n * G.left.rel)
       }
-      G.right.rel <- runif(5, 0, 0.45)
-      G.right.abs <- floor(n * G.right.rel)
-      while (any(G.right.abs < 2)) {
-        G.right.rel <- runif(5, 0, 0.45)
-        G.right.abs <- floor(n * G.right.rel)
-      }
-      G.rel <- multiscale.grid(G.left.rel, G.left.rel, method="cartesian", max.unbalance=Inf)
-      G.abs <- multiscale.grid(G.left.abs, G.left.abs, method="cartesian", max.unbalance=Inf)
-      m.rel <- multiscale.cpts(x, G.rel)
-      m.abs <- multiscale.cpts(x, G.abs)
+      m.rel <- multiscale.localPrune(x, G.left.rel)
+      m.abs <- multiscale.localPrune(x, G.left.abs)
       expect_equal(m.rel$cpts, m.abs$cpts)
       expect_equal(m.rel$pooled.cpts, m.abs$pooled.cpts)
     }
   }
 })
+

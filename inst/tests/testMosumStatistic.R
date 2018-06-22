@@ -1,16 +1,16 @@
 N_TEST <- 5 # replications of tests with random input data
 
-test_that("MOSUM pValue and critical value are consistent", {
-  for (i in seq_len(N_TEST)) {
-    n <- floor(runif(1, 50, 1000))
-    G.left <- floor(runif(1, 5, n/8))
-    G.right <- floor(runif(1, 5, n/8))
-    expect_equal(mosum.pValue(mosum.criticalValue(n, G.left, G.right, 0), n, G.left, G.right), 0)
-    expect_equal(mosum.pValue(mosum.criticalValue(n, G.left, G.right, 1), n, G.left, G.right), 1)
-    alpha <- runif(1, 0.01, 0.99)
-    expect_equal(mosum.pValue(mosum.criticalValue(n, G.left, G.right, alpha), n, G.left, G.right), alpha)
-  }
-})
+# test_that("MOSUM pValue and critical value are consistent", {
+#   for (i in seq_len(N_TEST)) {
+#     n <- floor(runif(1, 50, 1000))
+#     G.left <- floor(runif(1, 5, n/8))
+#     G.right <- floor(runif(1, 5, n/8))
+#     expect_equal(mosum.pValue(mosum.criticalValue(n, G.left, G.right, 0), n, G.left, G.right), 0)
+#     expect_equal(mosum.pValue(mosum.criticalValue(n, G.left, G.right, 1), n, G.left, G.right), 1)
+#     alpha <- runif(1, 0.01, 0.99)
+#     expect_equal(mosum.pValue(mosum.criticalValue(n, G.left, G.right, alpha), n, G.left, G.right), alpha)
+#   }
+# })
 test_that("Asymmetric MOSUM bandwidth margins are consistent", {
   for (i in seq_len(N_TEST)) {
     n <- floor(runif(1, 50, 1000))

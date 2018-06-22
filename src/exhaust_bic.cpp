@@ -27,7 +27,7 @@ NumericMatrix extract_sub(const IntegerVector &cand, const NumericVector &x) {
   const unsigned m = cand.length();
   NumericMatrix res(m-1, 4);
   unsigned i=0; // position in cand vector
-  unsigned j=cand[i]; // position in x vector
+  int j=cand[i]; // position in x vector
   double sum=0.0;
   double sum_sq=0.0;
   while (i+1<m) {
@@ -239,7 +239,7 @@ List exhaust_bic(const IntegerVector &cand,
     final_comb = 0;
   } else {
     unsigned final_ind_star = 0;
-    for (unsigned i=1; i<final.length(); ++i) {
+    for (int i=1; i<final.length(); ++i) {
       if (sbic_vals[final[i]] < sbic_vals[final[final_ind_star]]) {
         final_ind_star = i;
       }

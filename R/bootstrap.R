@@ -1,118 +1,137 @@
-#' Bootstrapping estimated change points
+#' Confidence intervals for change-points
 #' 
-#' Obtain bootstrap replicates of changepoint estimators 
-#' @param mcpts an object of class \code{mosum.cpts}, \code{multiscale.cpts}
-#' or \code{multiscale.bottomUp.cpts}
+#' Generate bootstrap confidence intervals for change-points.
+#' @param object an object of class \code{mosum.cpts}
+#' @param parm specification of which parameters are to be given confidence intervals; \code{parm = 'cpts'} is supported
+#' @param level numeric value in (0, 1), such that the \code{100(1-level)\%} confidence bootstrap intervals are computed
 #' @param N_reps number of bootstrap replications
-#' @param alpha numeric value in (0,1), such that the (1-alpha_CI)-confidence bootstrap intervals are computed
-#' @return object of class \code{cpts.bootstrap}, containing the following fields:
-#'    \item{CI}{data frame of five columns, containing the estimated changepoints (column \code{cpt}),
-#'    the pointwise alpha confidence intervals (columns \code{pCI_l} and \code{pCI_r})
-#'    and the uniform alpha confidence intervals (columns \code{uCI_l} and \code{uCI_r})}
-#'    \item{bootstrap_replicates}{matrix of dimension N_reps times q (where q denotes the estimated 
-#' number of changes in mcpts), containing
-#' N_reps bootstrapped replicates of the estimated changepoint locations}
+#' @param ... not in use
+#' @return object of class \code{cpts.ci}, containing the following fields:
+#'    \item{level,level}{input parameters}
+#'    \item{CI}{data frame of five columns, 
+#'    containing the estimated change-points (column \code{cpt}),
+#'    the pointwise confidence intervals 
+#'    (columns \code{pw.left} and \code{pw.right})
+#'    and the uniform confidence intervals 
+#'    (columns \code{unif.left} and \code{unif.right})}
+#'    for the corresponding change-points
 #' @details See the referenced literature for further details
-#' @references A. Meier, C. Kirch and H. Cho.
-#' \emph{mosum: A Package for Moving Sums in Change Point Analysis.}
-#' Unpublished manuscript, 2018+.
-#' @references H. Cho and C. Kirch.
-#' \emph{Multiple change-point detection via multiscale MOSUM procedure with localized pruning.}
-#' Unpublished manuscript, 2018+.
+#' @references A. Meier, C. Kirch and H. Cho (2018+)
+#' mosum: A Package for Moving Sums in change-point Analysis.
+#' \emph{Unpublished manuscript}.
+#' @references H. Cho and C. Kirch (2018+)
+#' Multiple change-point detection via multiscale MOSUM procedure with localised pruning.
+#' \emph{Unpublished manuscript}.
 #' @examples 
 #' set.seed(1337)
-#' x <- piecewiseStationary_timeSeries(lengths=rep(100,3), means=c(0,3,1), sds=rep(1,3))
-#' mcpts <- mosum.cpts(x, G=40)
-#' cpts_boot <- cpts.bootstrap(mcpts, 5000)
-#' print(cpts_boot$CI)
+#' x <- testData(lengths=rep(100, 3), means=c(0, 3, 1), sds=rep(1, 3))
+#' m <- mosum(x, G=40)
+#' ci <- confint(m, N_reps=5000)
+#' print(ci$CI)
 #' @importFrom Rcpp evalCpp
+#' @importFrom stats confint
 #' @useDynLib mosum, .registration = TRUE
+#' @method confint mosum.cpts
 #' @export
-cpts.bootstrap <- function(mcpts, N_reps, alpha=0.05) {
-  if (class(mcpts)=="mosum.cpts") {
-    bstrp <- mosum.cpts.bootstrap(mcpts, N_reps, alpha)
-  } else if (class(mcpts)=="multiscale.cpts") {
-    bstrp <- multiscale.cpts.bootstrap(mcpts, N_reps, alpha)
+confint.mosum.cpts <- function(object, parm='cpts', level=0.05, N_reps=1000, ...) {
+  stopifnot(class(object) == 'mosum.cpts')
+  stopifnot(parm=='cpts')
+  if (object$do.confint) {
+    return(object$ci)
   } else {
-    stop("mcpts object must be of class mosum.cpts or multiscale.cpts.")
-  }
-  return(bstrp)
-}
-
-#' Bootstrapping MOSUM changepointss
-#' @keywords internal
-mosum.cpts.bootstrap <- function(mcpts, N_reps, alpha) {
-  stopifnot(class(mcpts) == "mosum.cpts")
-  if (mcpts$bootstrap) {
-    return(mcpts$cpts_bootstrap)
-  } else {
-    x <- mcpts$m$x 
-    G <- mcpts$m$G
-    cpts <- mcpts$cpts
+    G.left <- object$G.left
+    G.right <- object$G.right
+    cpts <- object$cpts
     q <- length(cpts)
     cpts.info = matrix(NA, ncol=3, nrow=q)
-    cpts.info[,1] <- cpts
-    cpts.info[,2] <- rep(G, q)
-    if (mcpts$m$symmetric) {
-      cpts.info[,3] <- rep(G, q)
-    } else {
-      cpts.info[,3] <- rep(mcpts$m$G.right, q)
-    }
-    cpts_bootstrap(cpts.info, x, N_reps, alpha, mcpts)
+    cpts.info[, 1] <- cpts
+    cpts.info[, 2] <- G.left
+    cpts.info[, 3] <- G.right
+    cpts_bootstrap(cpts.info, N_reps, level, object)
   }
 }
 
-#' Bootstrapping multiscale MOSUM changepoints
-#' @keywords internal
-multiscale.cpts.bootstrap <- function(ms, N_reps, alpha) {
-  stopifnot(class(ms)=="multiscale.cpts")
-  if (ms$bootstrap) {
-    return(ms$cpts_bootstrap)
+#' Confidence intervals for change-points
+#' 
+#' Generate bootstrap confidence intervals for change-points.
+#' @param object an object of class \code{multiscale.cpts}
+#' @param parm specification of which parameters are to be given confidence intervals; \code{parm = 'cpts'} is supported
+#' @param level numeric value in (0, 1), such that the \code{100(1-level)\%} confidence bootstrap intervals are computed
+#' @param N_reps number of bootstrap replications
+#' @param ... not in use
+#' @return object of class \code{cpts.ci}, containing the following fields:
+#'    \item{level,N_reps}{input parameters}
+#'    \item{CI}{data frame of five columns, 
+#'    containing the estimated change-points (column \code{cpt}),
+#'    the pointwise confidence intervals 
+#'    (columns \code{pw.left} and \code{pw.right})
+#'    and the uniform confidence intervals 
+#'    (columns \code{unif.left} and \code{unif.right})}
+#'    for the corresponding change-points
+#' @details See the referenced literature for further details
+#' @references A. Meier, C. Kirch and H. Cho (2018+)
+#' mosum: A Package for Moving Sums in change-point Analysis.
+#' \emph{Unpublished manuscript}.
+#' @references H. Cho and C. Kirch (2018+)
+#' Multiple change-point detection via multiscale MOSUM procedure with localised pruning.
+#' \emph{Unpublished manuscript}.
+#' @examples 
+#' set.seed(1337)
+#' x <- testData(lengths=rep(100, 3), means=c(0, 3, 1), sds=rep(1, 3))
+#' mlp <-  multiscale.localPrune(x, G=c(8, 15, 30, 70))
+#' ci <- confint(mlp, N_reps=5000)
+#' print(ci$CI)
+#' @importFrom Rcpp evalCpp
+#' @importFrom stats confint
+#' @useDynLib mosum, .registration = TRUE
+#' @method confint multiscale.cpts
+#' @export
+confint.multiscale.cpts <- function(object, parm='cpts', level=0.05, N_reps=1000, ...) {
+  stopifnot(class(object)=='multiscale.cpts')
+  stopifnot(parm=='cpts')
+  if (object$do.confint) {
+    return(object$ci)
   } else {
-    x <- ms$x
-    cpts_bootstrap(ms$cpts.info, x, N_reps, alpha, ms)
+    cpts_bootstrap(object$cpts.info, N_reps, level, object)
   }
 }
 
 #' Helping/wrapper fuction for C++ calls
 #' @importFrom stats quantile
 #' @keywords internal
-cpts_bootstrap <- function(cpts_info, x, N_reps, alpha, mcpts) {
+cpts_bootstrap <- function(cpts_info, N_reps, level, mcpts) {
+  x <- mcpts$x
   q <- nrow(cpts_info)
-  if (q==0) {
-    cpts <- pCI_l <- pCI_r <- uCI_l <- uCI_r <- integer(0)
-    k_star <- matrix(NA, nrow=N_reps, ncol=0)
-  }
+  if (q==0) cpts <- pointwise.left <- pointwise.right <- uniform.left <- uniform.right <- integer(0)
   if (q>0) {
     n <- length(x)
     cpts <- cpts_info[,1]
     # Get bootstrap replicates from C++
-    tmp <- cpts_bootstrap_help(cpts_info, x, N_reps)
+    tmp <- cpts_bootstrap_help(as.matrix(cpts_info), x, N_reps)
     k_star <- tmp$k_star
     # Pointwise confidence intervals
-    C_value_j <- apply(abs(tmp$k_star1), 2, quantile, 1-alpha/2)
-    pCI_l <- pmax(1, cpts - C_value_j)
-    pCI_r <- pmin(n, cpts + C_value_j)
+    C_value_j <- apply(abs(tmp$k_star1), 2, quantile, 1-level/2)
+    pointwise.left <- ceiling(pmax(pmax(1, cpts-cpts_info[, 2]+1), cpts - C_value_j))
+    pointwise.right <- floor(pmin(pmin(n, cpts+cpts_info[, 3]), cpts + C_value_j))
     # Uniform confidence intervals
     uCI_help <- apply(abs(tmp$k_star2), 1, max)
-    C_value <- quantile(uCI_help, 1-alpha)
-    uCI_l <- uCI_r <- rep(NA, q)
+    C_value <- quantile(uCI_help, 1-level)
+    uniform.left <- uniform.right <- rep(NA, q)
     for (j in seq_len(q)) {
-      uCI_l[j] <- max(1,
+      uniform.left[j] <- max(max(1, cpts[j] - cpts_info[j, 2]+1),
                       cpts[j] - C_value * tmp$sigma2_hat[j] / tmp$d_hat[j]^2)
-      uCI_r[j] <- min(n,
+      uniform.right[j] <- min(min(n, cpts[j] + cpts_info[j, 3]),
                       cpts[j] + C_value * tmp$sigma2_hat[j] / tmp$d_hat[j]^2)
     }
   }
+  uniform.left <- ceiling(uniform.left)
+  uniform.right <- floor(uniform.right)
   CI <- data.frame(cpt=cpts, 
-                   pCI_l=pCI_l,
-                   pCI_r=pCI_r,
-                   uCI_l=uCI_l,
-                   uCI_r=uCI_r)
-  return(structure(list(mcpts=mcpts,
-                        N_reps=N_reps,
-                        alpha=alpha,
-                        CI=CI,
-                        bootstrap_replicates=k_star),
-              class="cpts.bootstrap"))
+                   pw.left=pointwise.left,
+                   pw.right=pointwise.right,
+                   unif.left=uniform.left,
+                   unif.right=uniform.right)
+  return(structure(list(N_reps=N_reps,
+                        level=level,
+                        CI=CI), class='cpts.ci'))
 }

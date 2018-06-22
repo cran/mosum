@@ -2,13 +2,13 @@
 % Please edit documentation in R/RcppExports.R
 \name{rolling_sum}
 \alias{rolling_sum}
-\title{equivalent to zoo::rollsum(x, k=G, fill=NA, align="left"), 
+\title{equivalent to rollsum(x, k=G, fill=NA, align="left") in the package zoo, 
 but optimized for speed}
 \usage{
 rolling_sum(x, G)
 }
 \description{
-equivalent to zoo::rollsum(x, k=G, fill=NA, align="left"), 
+equivalent to rollsum(x, k=G, fill=NA, align="left") in the package zoo, 
 but optimized for speed
 }
 \keyword{internal}

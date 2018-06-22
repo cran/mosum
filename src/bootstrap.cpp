@@ -101,7 +101,7 @@ List cpts_bootstrap_help(IntegerMatrix cpts_info,
   
   NumericVector d_hat(q); // estimated jump heights
   NumericVector sigma2_hat(q); // estimated noise variance (pooled from left and right stationary part)
-  for (unsigned j=0; j<q; ++j) {
+  for (int j=0; j<q; ++j) {
     const int m_pos = cpts[j]-1;
     const int l_pos = (j==0) ? 0 : (cpts[j-1]);
     const int r_pos = (j==q-1) ? n-1 : cpts[j+1]-1;
@@ -115,14 +115,14 @@ List cpts_bootstrap_help(IntegerMatrix cpts_info,
     sigma2_hat[j] = (tau_l + tau_r) / denominator;
   }
   
-  for (unsigned iboot=0; iboot<N_reps; ++iboot) {
+  for (int iboot=0; iboot<N_reps; ++iboot) {
     // 
     // semi-local bootstrap (resample all but recompute locally)
     // note: redundant, may be sped up in future revisions
     //
     NumericVector x_star = bootstrapped_timeSeries(cpts, x);
 
-    for (unsigned j=0; j<q; ++j) {
+    for (int j=0; j<q; ++j) {
       const int G_l = cpts_info(j, 1);
       const int G_r = cpts_info(j, 2);
       k_star(iboot,j) = get_k_star(x_star, cpts[j], G_l, G_r);

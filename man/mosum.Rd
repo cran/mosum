@@ -2,28 +2,29 @@
 % Please edit documentation in R/mosum.R
 \name{mosum}
 \alias{mosum}
-\title{MOSUM statistic}
+\title{MOSUM procedure for change-point estimation}
 \usage{
 mosum(x, G, G.right = NA, var.est.method = "mosum", var.custom = NULL,
-  boundary.extension = T)
+  boundary.extension = T, threshold = c("critical.value", "custom")[1],
+  alpha = 0.05, threshold.custom = NULL, criterion = c("eta",
+  "epsilon")[1], eta = 0.4, epsilon = 0.2, do.confint = F, level = 0.05,
+  N_reps = 1000)
 }
 \arguments{
 \item{x}{input data (\code{numeric} vector or object of class \code{ts})}
 
-\item{G}{an integer value for the length of the moving sum window; 
-alternatively a number between 0 and 0.5 describing the moving sum bandwidth
-relative to n (the length of x);}
+\item{G}{an integer value for the moving sum bandwidth;
+alternatively a number between \code{0} and \code{0.5} describing the moving sum bandwidth
+relative to \code{length(x)}}
 
-\item{G.right}{iff \code{!is.na(G.right)}, the asymmetric bandwidth (G,G.right)
-will be used;}
+\item{G.right}{if \code{!is.na(G.right)}, the asymmetric bandwidth (G, G.right) will be used}
 
-\item{var.est.method}{how the variance should be estimated;
+\item{var.est.method}{how the variance is estimated;
 possible values are
 \itemize{
-   \item{"custom" if a vector is to be parsed by the user;
-    use \code{var.custom} in this case to to so}
-   \item{"mosum" for the both-sided MOSUM variance estimator}
-   \item{"mosum.min" for the minimum of the sample variance estimates from the left and right summation windows}
+   \item{\code{'custom'}}{a vector of \code{length(x)} is to be parsed by the user; use \code{var.custom} in this case to to so}
+   \item{\code{'mosum'}}{both-sided MOSUM variance estimator}
+   \item{\code{'mosum.min'}}{minimum of the sample variance estimates from the left and right summation windows}
 }}
 
 \item{var.custom}{a numeric vector (of the same length as \code{x}) containing
@@ -31,42 +32,66 @@ local estimates of the variance or long run variance; use iff \code{var.est.meth
 
 \item{boundary.extension}{a logical value indicating whether the boundary
 values should be filled-up with CUSUM values}
+
+\item{threshold}{string indicating which threshold should be used to determine significance.
+By default, it is chosen from the asymptotic distribution at the given significance level \code{alpha}.
+Alternatively it is possible to parse a user-defined numerical value with \code{threshold.custom}}
+
+\item{alpha}{a numeric value for the significance level with
+\code{0 <= alpha <= 1}; use iff \code{threshold='critical.value'}}
+
+\item{threshold.custom}{a numeric value greater than 0 for the threshold of significance;
+use iff \code{threshold='custom'}}
+
+\item{criterion}{how to decide whether each point \code{p} at which MOSUM statistic 
+exceeds the threshold is a change-point; possible values are
+\itemize{
+   \item{\code{'eta'}}{there is no bigger exceeding in an \code{eta*G} environment of \code{p}}
+   \item{\code{'epsilon'}}{\code{p} is the maximum of its local exceeding environment, which has at least size \code{epsilon*G}}
+}}
+
+\item{eta}{a positive numeric value for the minimal mutual distance of 
+changes, relative to moving sum bandwidth (iff \code{criterion='eta'})}
+
+\item{epsilon}{a numeric value in (0,1] for the minimal size of exceeding
+environments, relative to moving sum bandwidth (iff \code{criterion='epsilon'})}
+
+\item{do.confint}{flag indicating whether to compute the confidence intervals for change-points}
+
+\item{level}{use iff \code{do.confint=TRUE}; a numeric value (\code{0 <= level <= 1}) with which
+\code{100(1-level)\%} confidence interval is generated}
+
+\item{N_reps}{use iff \code{do.confint=TRUE}; number of bootstrap replicates to be generated}
 }
 \value{
-S3 \code{mosum} object, which contains the following fields:
-   \item{x}{the numeric input vector provided}
-   \item{G,symmetric,G.right}{input parameters}
+S3 \code{mosum.cpts} object, which contains the following fields:
+   \item{x}{input data}
+   \item{G.left,G.right}{left and right bandwidths}
    \item{var.est.method,var.custom,boundary.extension}{input parameters}
-   \item{stat}{statistical result values; note that the first and last G values are \code{NA} iff \code{boundary.extension=F}}
-   \item{rollsums}{equals \code{stat*sqrt(var.estimation)}}
-   \item{var.estimation}{the local variance estimation according 
-   to \code{var.est.method}}
+   \item{stat}{a series of MOSUM statistic values; the first \code{G} and last \code{G.right} values are \code{NA} iff \code{boundary.extension=F}}
+   \item{rollsums}{a series of MOSUM detector values; equals \code{stat*sqrt(var.estimation)}}
+   \item{var.estimation}{the local variance estimated according to \code{var.est.method}}
+   \item{threshold,alpha,threshold.custom}{input parameters}
+   \item{critical.value}{critical value of the corresponding MOSUM test}
+   \item{criterion,eta,epsilon}{input parameters}
+   \item{cpts}{a vector containing the estimated change-point locations}
+   \item{do.confint}{input parameter}
+   \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint=TRUE}}
 }
 \description{
-Computes the statistical values for the MOSUM test for changes in the mean.
-}
-\details{
-This class only contains the values for the MOSUM statistic.
-For statistical evaluation and changepoint extraction, use
-\link[mosum]{mosum.test} and \link[mosum]{mosum.cpts}.
-See also \link[mosum]{multiscale.cpts}.
+Computes the MOSUM detector, detects (multiple) change-points and estimates their locations.
 }
 \examples{
-# Statistical values and variance est. for independent data
-x <- piecewiseStationary_timeSeries(lengths=rep(100,3), means=c(0,5,-2), sds=rep(1,3))
+x <- testData(lengths=rep(100, 3), means=c(0, 5, -2), sds=rep(1, 3))
 m <- mosum(x, G=40)
-par(mfcol=c(3,1))
-plot.ts(x)
 plot(m)
-plot.ts(m$var.estimation)
-par(mfcol=c(1,1))
+summary(m)
 }
 \references{
-A. Meier, C. Kirch and H. Cho.
-\emph{mosum: A Package for Moving Sums in Change Point Analysis.}
-Unpublished manuscript, 2018+.
+A. Meier, C. Kirch and H. Cho (2018+)
+mosum: A Package for Moving Sums in Change Point Analysis. \emph{Unpublished manuscript}.
 
-B. Eichinger and C. Kirch.
-\emph{A MOSUM procedure for the estimation of multiple random change points.}
-Bernoulli, Volume 24, Number 1 (2018), 526-564.
+B. Eichinger and C. Kirch (2018)
+A MOSUM procedure for the estimation of multiple random change-points.
+\emph{Bernoulli}, Volume 24, Number 1, pp. 526-564.
 }

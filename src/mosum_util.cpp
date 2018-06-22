@@ -1,6 +1,6 @@
 #include "mosum_util.h"
 
-//' equivalent to zoo::rollsum(x, k=G, fill=NA, align="left"), 
+//' equivalent to rollsum(x, k=G, fill=NA, align="left") in the package zoo, 
 //' but optimized for speed
 //' @keywords internal
 // [[Rcpp::export]]

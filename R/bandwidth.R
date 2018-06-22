@@ -31,24 +31,22 @@ bandwidths.default <- function(n, d.min=10, G.min=8, G.max=3*sqrt(n)) {
 #' @param method how the asymmetric bandwidths are created;
 #' possible values are
 #' \itemize{
-#'    \item{"cartesian" create all bandwidths in the Cartesian product of 
+#'    \item{\code{'cartesian'}}{create all bandwidths in the Cartesian product of 
 #'           bandwidths.left and bandwidths.right}
-#'    \item{"concatenate" join bandwidths.left and bandwidths.right element-wise} 
+#'    \item{\code{'concatenate'}}{join bandwidths.left and bandwidths.right element-wise} 
 #' }
 #' @param max.unbalance a numeric value for the maximal ratio between maximal and minimal bandwidth,
-#' \code{1 <= max.unbalance <= Inf}; use iff method="cartesian"
+#' \code{1 <= max.unbalance <= Inf}; use iff \code{method='cartesian'}
 #' @return S3 \code{multiscale.grid} object to be used in the \code{multiscale.grid} function
-#' @examples multiscale.grid(c(10,15,30))
-#' multiscale.grid((1:5)*5, max.unbalance=2)
-#' @export
+#' @keywords internal
 multiscale.grid <- function(bandwidths.left, bandwidths.right=bandwidths.left, 
-                            method="cartesian", max.unbalance=4) {
+                            method='cartesian', max.unbalance=4) {
   stopifnot(bandwidths.left > 0)
   stopifnot(bandwidths.right > 0)
   stopifnot(max.unbalance >= 1.0)
   H.left <- integer(0)
   H.right <- integer(0)
-  if (method == "cartesian") {
+  if (method == 'cartesian') {
     for (G.left in bandwidths.left) {
       for (G.right in bandwidths.right) {
         ratio <- max(G.left, G.right) / min(G.left, G.right)
@@ -59,7 +57,7 @@ multiscale.grid <- function(bandwidths.left, bandwidths.right=bandwidths.left,
       }
     }
   } else {
-    stopifnot(method == "concatenate")
+    stopifnot(method == 'concatenate')
     stopifnot(length(bandwidths.left)==length(bandwidths.left))
     H.left <- bandwidths.left
     H.right <- bandwidths.right 
@@ -67,6 +65,6 @@ multiscale.grid <- function(bandwidths.left, bandwidths.right=bandwidths.left,
   stopifnot(length(H.left)==length(H.right))
   structure(list(grid=cbind(H.left, H.right),
                  max.unbalance=max.unbalance),
-            class = "multiscale.grid"
+            class = 'multiscale.grid'
   )
 }

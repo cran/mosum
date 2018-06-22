@@ -4,7 +4,7 @@
 \alias{cpts_bootstrap}
 \title{Helping/wrapper fuction for C++ calls}
 \usage{
-cpts_bootstrap(cpts_info, x, N_reps, alpha, mcpts)
+cpts_bootstrap(cpts_info, N_reps, level, mcpts)
 }
 \description{
 Helping/wrapper fuction for C++ calls
