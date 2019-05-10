@@ -3,8 +3,9 @@
 #' Computes the statistical values for the MOSUM test for changes in the mean.
 #' @param x input data (\code{numeric} vector or object of class \code{ts})
 #' @param G an integer value for the length of the moving sum window; 
-#' alternatively a number between \code{0} and \code{0.5} describing the moving sum bandwidth
-#' relative to \code{length(x)}
+#' \code{G} should be less than \code{length(n)/2}.
+#' Alternatively a number between \code{0} and \code{0.5} describing the moving sum bandwidth
+#' relative to \code{length(x)}. 
 #' @param G.right iff \code{!is.na(G.right)}, the asymmetric bandwidth (G,G.right) will be used
 #' @param var.est.method how the variance is estimated;
 #' possible values are
@@ -22,7 +23,7 @@
 #'    \item{x}{the numeric input vector provided}
 #'    \item{G.left,G.right}{left and right bandwidths}
 #'    \item{var.est.method,var.custom,boundary.extension}{input parameters}
-#'    \item{stat}{a series of MOSUM statistic values; the first \code{G} and last \code{G.right} values are \code{NA} iff \code{boundary.extension=F}}
+#'    \item{stat}{a series of MOSUM statistic values; the first \code{G} and last \code{G.right} values are \code{NA} iff \code{boundary.extension=FALSE}}
 #'    \item{rollsums}{a series of MOSUM detector values; equals \code{stat*sqrt(var.estimation)}}
 #'    \item{var.estimation}{the local variance estimated according to \code{var.est.method}}
 #' @details This class only contains the values for the MOSUM statistic.
@@ -32,10 +33,16 @@
 #' @useDynLib mosum, .registration = TRUE
 #' @keywords internal 
 mosum.stat <- function(x, G, G.right=NA, var.est.method='mosum', 
-                  var.custom=NULL, boundary.extension=T) {
+                  var.custom=NULL, boundary.extension=TRUE) {
   n <- length(x)
-  
   symmetric <- is.na(G.right)
+  
+  if(G < 1 & G >= 0.5) stop('Please use relative bandwidth between 0 and 0.5.')
+  if(G >= n/2) stop('Please use bandwidth smaller than length(x)/2.')
+  if(!symmetric){
+    if(G.right < 1 & G.right >= 0.5) stop('Please use relative bandwidth between 0 and 0.5.')
+    if(G.right >= n/2) stop('Please use bandwidth smaller than length(x)/2.')
+  }
   
   abs.bandwidth <- (G>=1)
   if (!abs.bandwidth) {
@@ -45,7 +52,7 @@ mosum.stat <- function(x, G, G.right=NA, var.est.method='mosum',
   
   # Consistency checks on input
   stopifnot(NCOL(x) == 1) 
-  stopifnot(class(x)=='ts' || class(x)=='numeric')
+  stopifnot(class(x)=='ts' || class(x)=='numeric' || class(x) == 'timeSeries')
   stopifnot(G > 0 && G < n)
   stopifnot(symmetric || !is.na(G.right))
   stopifnot(symmetric || (G.right > 0 && G.right < n))
@@ -67,14 +74,14 @@ mosum.stat <- function(x, G, G.right=NA, var.est.method='mosum',
   
   # Calculate variance estimation.
   if (!is.null(var.custom) && var.est.method != 'custom') {
-    stop('Please use var.est.method=custom when parsing var.custom.')
+    stop('Please use var.est.method = custom when parsing var.custom.')
   }
   if (var.est.method == 'custom') {
     if (is.null(var.custom)) {
       stop('Expecting var.custom to be not NULL for var.est.method=custom')
     }
     if (length(var.custom) != n) {
-      stop('Expecting var.custom to be of length n=length(x)')
+      stop('Expecting var.custom to be of length n = length(x)')
     }
     var <- var.custom
   } else if (var.est.method == 'global') {
@@ -122,10 +129,10 @@ mosum.stat <- function(x, G, G.right=NA, var.est.method='mosum',
       var.estimation[1:G.left] <- var.estimation[G.left]
     }
     if (n > 2*G.right) {
-      weights.right <- sqrt( (G.left+G.right) / (1:G.right) / ((G.left+G.right-1):(G.left))) 
-      x.rev <- rev(x[(n-2*G.right+1):n])
-      unscaledStatistic[(n-G.right+1):n] <- rev( cumsum(mean(x.rev[1:(2*G.right)])-x.rev[1:G.right])  * 
-                                    weights.right)
+      weights.right <- sqrt( (G.left+G.right) / ((G.right - 1):0) / ((G.left + 1):(G.left + G.right))) 
+      x.rev <- x[(n - G.left - G.right + 1):n]
+      unscaledStatistic[(n-G.right+1):n] <- cumsum(mean(x.rev) - x.rev)[-(1:G.left)] * weights.right
+      unscaledStatistic[n] <- 0
       var.estimation[(n-G.right+1):n] <- var.estimation[n-G.right]
     }
   }
@@ -167,7 +174,7 @@ plot.mosum.stat <- function(m, alpha=0.05, critical.value.col='blue',
   G.left <- m$G.left
   G.right <- m$G.right
 
-  abline(h=mosumCriticalValue(n=length(m$x), G.left=G.left,
+  abline(h=mosum.criticalValue(n=length(m$x), G.left=G.left,
                                G.right=G.right, alpha=alpha),
          col=critical.value.col, ...)
 }

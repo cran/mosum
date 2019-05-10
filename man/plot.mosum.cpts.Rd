@@ -2,19 +2,25 @@
 % Please edit documentation in R/mosum.R
 \name{plot.mosum.cpts}
 \alias{plot.mosum.cpts}
-\title{Plotting MOSUM change-points}
+\title{Plotting the output from MOSUM procedure}
 \usage{
-\method{plot}{mosum.cpts}(x, critical.value.col = "blue", cpts.col = "red",
-  xlab = "Time", ...)
+\method{plot}{mosum.cpts}(x, display = c("data", "mosum")[1],
+  cpts.col = "red", critical.value.col = "blue", xlab = "Time", ...)
 }
 \arguments{
 \item{x}{a \code{mosum.cpts} object}
 
-\item{critical.value.col}{a specification for the color of the
-critical value, see \link[graphics]{par}}
+\item{display}{which to be plotted against the change-point estimators; possible values are
+\itemize{
+   \item{\code{"data"}}{input time series is plotted along with the estimated piecewise constant signal}
+   \item{\code{"mosum"}}{scaled MOSUM detector values are plotted}
+}}
 
-\item{cpts.col}{a specification for the color of the
-change-points, see \link[graphics]{par}}
+\item{cpts.col}{a specification for the color of the vertical lines at
+the change-point estimators, see \link[graphics]{par}}
+
+\item{critical.value.col}{a specification for the color of the horizontal line
+indicating the critical value, see \link[graphics]{par}; use iff \code{display = "mosum"}}
 
 \item{xlab}{graphical parameter}
 
@@ -22,10 +28,17 @@ change-points, see \link[graphics]{par}}
 and \link[graphics]{abline}}
 }
 \description{
-Plotting method for objects of class \code{mosum.cpts}
+Plotting method for S3 objects of class \code{mosum.cpts}
 }
 \details{
-The input time series is plotted along with vertical lines indicating
-the estimated change-point locations and a horizontal line indicating
-the critical value used in the MOSUM test.
+The location of each change-point estimator is plotted as a vertical line
+against the input time series and the estimated piecewise constant signal (\code{display = "data"})
+or MOSUM detector values (\code{display = "mosum"}).
+}
+\examples{
+x <- testData(lengths = rep(100, 3), means = c(0, 5, -2), sds = rep(1, 3), seed = 1234)$x
+m <- mosum(x, G = 40)
+par(mfrow = c(2, 1), mar = c(2.5, 2.5, 2.5, .5))
+plot(m, display = "data")
+plot(m, display = "mosum")
 }

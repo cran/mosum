@@ -5,14 +5,15 @@
 \title{MOSUM statistic}
 \usage{
 mosum.stat(x, G, G.right = NA, var.est.method = "mosum",
-  var.custom = NULL, boundary.extension = T)
+  var.custom = NULL, boundary.extension = TRUE)
 }
 \arguments{
 \item{x}{input data (\code{numeric} vector or object of class \code{ts})}
 
 \item{G}{an integer value for the length of the moving sum window; 
-alternatively a number between \code{0} and \code{0.5} describing the moving sum bandwidth
-relative to \code{length(x)}}
+\code{G} should be less than \code{length(n)/2}.
+Alternatively a number between \code{0} and \code{0.5} describing the moving sum bandwidth
+relative to \code{length(x)}.}
 
 \item{G.right}{iff \code{!is.na(G.right)}, the asymmetric bandwidth (G,G.right) will be used}
 
@@ -36,7 +37,7 @@ S3 \code{mosum.stat} object, which contains the following fields:
    \item{x}{the numeric input vector provided}
    \item{G.left,G.right}{left and right bandwidths}
    \item{var.est.method,var.custom,boundary.extension}{input parameters}
-   \item{stat}{a series of MOSUM statistic values; the first \code{G} and last \code{G.right} values are \code{NA} iff \code{boundary.extension=F}}
+   \item{stat}{a series of MOSUM statistic values; the first \code{G} and last \code{G.right} values are \code{NA} iff \code{boundary.extension=FALSE}}
    \item{rollsums}{a series of MOSUM detector values; equals \code{stat*sqrt(var.estimation)}}
    \item{var.estimation}{the local variance estimated according to \code{var.est.method}}
 }

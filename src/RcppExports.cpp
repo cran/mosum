@@ -149,9 +149,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// exhaust_bic
-List exhaust_bic(const IntegerVector& cand, const NumericMatrix& sub_sums, double strength, bool log_penalty, unsigned n, unsigned auc, double min_cost);
-RcppExport SEXP _mosum_exhaust_bic(SEXP candSEXP, SEXP sub_sumsSEXP, SEXP strengthSEXP, SEXP log_penaltySEXP, SEXP nSEXP, SEXP aucSEXP, SEXP min_costSEXP) {
+// setBitNumber
+int setBitNumber(int n);
+RcppExport SEXP _mosum_setBitNumber(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(setBitNumber(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// exhaust_sc
+List exhaust_sc(const IntegerVector& cand, const NumericMatrix& sub_sums, double strength, bool log_penalty, unsigned n, unsigned auc, double min_cost);
+RcppExport SEXP _mosum_exhaust_sc(SEXP candSEXP, SEXP sub_sumsSEXP, SEXP strengthSEXP, SEXP log_penaltySEXP, SEXP nSEXP, SEXP aucSEXP, SEXP min_costSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -162,7 +173,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
     Rcpp::traits::input_parameter< unsigned >::type auc(aucSEXP);
     Rcpp::traits::input_parameter< double >::type min_cost(min_costSEXP);
-    rcpp_result_gen = Rcpp::wrap(exhaust_bic(cand, sub_sums, strength, log_penalty, n, auc, min_cost));
+    rcpp_result_gen = Rcpp::wrap(exhaust_sc(cand, sub_sums, strength, log_penalty, n, auc, min_cost));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -207,7 +218,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mosum_numberOfSetBits", (DL_FUNC) &_mosum_numberOfSetBits, 1},
     {"_mosum_comb_contains_cpt", (DL_FUNC) &_mosum_comb_contains_cpt, 2},
     {"_mosum_get_local_costs", (DL_FUNC) &_mosum_get_local_costs, 2},
-    {"_mosum_exhaust_bic", (DL_FUNC) &_mosum_exhaust_bic, 7},
+    {"_mosum_setBitNumber", (DL_FUNC) &_mosum_setBitNumber, 1},
+    {"_mosum_exhaust_sc", (DL_FUNC) &_mosum_exhaust_sc, 7},
     {"_mosum_rolling_sum", (DL_FUNC) &_mosum_rolling_sum, 2},
     {"_mosum_eta_criterion_help", (DL_FUNC) &_mosum_eta_criterion_help, 5},
     {NULL, NULL, 0}

@@ -14,3 +14,8 @@
 \description{
 Print method for objects of class \code{mosum.cpts}
 }
+\examples{
+x <- testData(lengths = rep(100, 3), means = c(0, 5, -2), sds = rep(1, 3), seed = 1234)$x
+m <- mosum(x, G = 40)
+print(m)
+}

@@ -1,16 +1,18 @@
-#' Default choice of multiple bandwidth set
+#' Default choice for the set of multiple bandwidths
 #' 
-#' Create bandwidths according to a default formula of the sample size
+#' Create bandwidths according to a default function of the sample size
 #' @param n integer representing the sample size
-#' @param d.min integer for the minimal mutual distance of change points that can be expected
+#' @param d.min integer for the minimal mutual distance of change-points that can be expected
 #' @param G.min integer for the minimal allowed bandwidth
 #' @param G.max integer for the maximal allowed bandwidth
 #' @details Returns an integer vector of bandwidths (G_1,...,G_m), 
-#' with G_0 = G_1 = max(G.min, 2/3*d.min), and G_{j+1} = G_{j-1} + G_j (for j=1,...,m-1)
-#' and m such that G_m <= G.max.
+#' with G_0 = G_1 = max(\code{G.min}, 2/3*\code{d.min}), G_{j+1} = G_{j-1} + G_j (for j = 1, ..., m-1)
+#' and m satisfying G_m <= \code{G.max} while G_{m+1} > \code{G.max}.
 #' @return an integer vector of bandwidths
+#' @examples 
+#' bandwidths.default(1000, 10, 10, 200)
 #' @export
-bandwidths.default <- function(n, d.min=10, G.min=8, G.max=3*sqrt(n)) {
+bandwidths.default <- function(n, d.min=10, G.min=10, G.max=min(n/2, n^(2/3))) {
   G_0 <- G_1 <- max(G.min, round(2/3*d.min))
   G <- c(G_0, G_1)
   j <- 3
@@ -25,7 +27,7 @@ bandwidths.default <- function(n, d.min=10, G.min=8, G.max=3*sqrt(n)) {
 
 #' Multiscale bandwidth grids
 #' 
-#' Create asymmetric bandwidth grids to be used with \code{multiscale.cpts}
+#' Create asymmetric bandwidth grids to be used with \code{multiscale.localPrune}
 #' @param bandwidths.left left parts of the bandwidths
 #' @param bandwidths.right right parts of the bandwidths
 #' @param method how the asymmetric bandwidths are created;

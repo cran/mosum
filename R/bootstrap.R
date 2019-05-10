@@ -2,38 +2,36 @@
 #' 
 #' Generate bootstrap confidence intervals for change-points.
 #' @param object an object of class \code{mosum.cpts}
-#' @param parm specification of which parameters are to be given confidence intervals; \code{parm = 'cpts'} is supported
+#' @param parm specification of which parameters are to be given confidence intervals; \code{parm = "cpts"} is supported
 #' @param level numeric value in (0, 1), such that the \code{100(1-level)\%} confidence bootstrap intervals are computed
 #' @param N_reps number of bootstrap replications
 #' @param ... not in use
-#' @return object of class \code{cpts.ci}, containing the following fields:
-#'    \item{level,level}{input parameters}
+#' @return S3 object of class \code{cpts.ci}, containing the following fields:
+#'    \item{level, N_reps}{input parameters}
 #'    \item{CI}{data frame of five columns, 
-#'    containing the estimated change-points (column \code{cpt}),
+#'    containing the estimated change-points (column \code{cpts}),
 #'    the pointwise confidence intervals 
 #'    (columns \code{pw.left} and \code{pw.right})
 #'    and the uniform confidence intervals 
-#'    (columns \code{unif.left} and \code{unif.right})}
-#'    for the corresponding change-points
+#'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
 #' @details See the referenced literature for further details
-#' @references A. Meier, C. Kirch and H. Cho (2018+)
-#' mosum: A Package for Moving Sums in change-point Analysis.
+#' @references A. Meier, C. Kirch and H. Cho (2019+)
+#' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Unpublished manuscript}.
-#' @references H. Cho and C. Kirch (2018+)
+#' @references H. Cho and C. Kirch (2019+)
 #' Multiple change-point detection via multiscale MOSUM procedure with localised pruning.
 #' \emph{Unpublished manuscript}.
 #' @examples 
-#' set.seed(1337)
-#' x <- testData(lengths=rep(100, 3), means=c(0, 3, 1), sds=rep(1, 3))
-#' m <- mosum(x, G=40)
-#' ci <- confint(m, N_reps=5000)
+#' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
+#' m <- mosum(x, G = 40)
+#' ci <- confint(m, N_reps = 5000)
 #' print(ci$CI)
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats confint
 #' @useDynLib mosum, .registration = TRUE
 #' @method confint mosum.cpts
 #' @export
-confint.mosum.cpts <- function(object, parm='cpts', level=0.05, N_reps=1000, ...) {
+confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, ...) {
   stopifnot(class(object) == 'mosum.cpts')
   stopifnot(parm=='cpts')
   if (object$do.confint) {
@@ -55,31 +53,29 @@ confint.mosum.cpts <- function(object, parm='cpts', level=0.05, N_reps=1000, ...
 #' 
 #' Generate bootstrap confidence intervals for change-points.
 #' @param object an object of class \code{multiscale.cpts}
-#' @param parm specification of which parameters are to be given confidence intervals; \code{parm = 'cpts'} is supported
+#' @param parm specification of which parameters are to be given confidence intervals; \code{parm = "cpts"} is supported
 #' @param level numeric value in (0, 1), such that the \code{100(1-level)\%} confidence bootstrap intervals are computed
 #' @param N_reps number of bootstrap replications
 #' @param ... not in use
-#' @return object of class \code{cpts.ci}, containing the following fields:
-#'    \item{level,N_reps}{input parameters}
+#' @return S3 object of class \code{cpts.ci}, containing the following fields:
+#'    \item{level, N_reps}{input parameters}
 #'    \item{CI}{data frame of five columns, 
-#'    containing the estimated change-points (column \code{cpt}),
+#'    containing the estimated change-points (column \code{cpts}),
 #'    the pointwise confidence intervals 
 #'    (columns \code{pw.left} and \code{pw.right})
 #'    and the uniform confidence intervals 
-#'    (columns \code{unif.left} and \code{unif.right})}
-#'    for the corresponding change-points
+#'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
 #' @details See the referenced literature for further details
-#' @references A. Meier, C. Kirch and H. Cho (2018+)
-#' mosum: A Package for Moving Sums in change-point Analysis.
+#' @references A. Meier, C. Kirch and H. Cho (2019+)
+#' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Unpublished manuscript}.
-#' @references H. Cho and C. Kirch (2018+)
+#' @references H. Cho and C. Kirch (2019+)
 #' Multiple change-point detection via multiscale MOSUM procedure with localised pruning.
 #' \emph{Unpublished manuscript}.
 #' @examples 
-#' set.seed(1337)
-#' x <- testData(lengths=rep(100, 3), means=c(0, 3, 1), sds=rep(1, 3))
-#' mlp <-  multiscale.localPrune(x, G=c(8, 15, 30, 70))
-#' ci <- confint(mlp, N_reps=5000)
+#' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
+#' mlp <-  multiscale.localPrune(x, G = c(8, 15, 30, 70))
+#' ci <- confint(mlp, N_reps = 5000)
 #' print(ci$CI)
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats confint
@@ -126,7 +122,7 @@ cpts_bootstrap <- function(cpts_info, N_reps, level, mcpts) {
   }
   uniform.left <- ceiling(uniform.left)
   uniform.right <- floor(uniform.right)
-  CI <- data.frame(cpt=cpts, 
+  CI <- data.frame(cpts=cpts, 
                    pw.left=pointwise.left,
                    pw.right=pointwise.right,
                    unif.left=uniform.left,

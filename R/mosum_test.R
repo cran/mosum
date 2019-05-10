@@ -14,12 +14,20 @@ mosum.asymptoticB <- function(x, K) {
 #' 
 #' Computes the asymptotic critical value for the MOSUM test.
 #' @param n an integer value for the length of the input data
-#' @param G.left,G.right integer values for the left moving sum bandwidth (G.left,G.right)
+#' @param G.left,G.right integer values for the left and right moving sum bandwidth (G.left, G.right)
 #' @param alpha a numeric value for the significance level with
 #' \code{0 <= alpha <= 1}
 #' @return a numeric value for the asymptotic critical value for the MOSUM test
+#' @examples
+#' x <- testData(lengths = rep(100, 3), means = c(0, 5, -2), sds = rep(1, 3), seed = 1234)$x
+#' m <- mosum(x, G = 40)
+#' par(mfrow = c(2, 1))
+#' plot(m$stat, type = "l", xlab = "Time", ylab = "", main = "mosum")
+#' abline(h = mosum.criticalValue(300, 40, 40, .1), col = 4)
+#' abline(v = m$cpts, col = 2)
+#' plot(m, display = "mosum") # identical plot is produced 
 #' @export
-mosumCriticalValue <- function(n, G.left, G.right, alpha) {
+mosum.criticalValue <- function(n, G.left, G.right, alpha) {
   G.min <- min(G.left, G.right)
   G.max <- max(G.left, G.right)
   K <- G.min / G.max

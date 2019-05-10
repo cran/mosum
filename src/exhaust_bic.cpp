@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include <cmath>
 using namespace Rcpp;
+using namespace std;
 
 //' Get integer vector of changepoint indices,
 //' based on bool-field representation of combinations.
@@ -121,7 +122,42 @@ double get_local_costs(unsigned icomb, const NumericMatrix &sub_sums) {
   return res;
 }
 
-//' Algorithm II (Local change-point search with sBIC)
+//' where is leftmost one?
+//' https://www.geeksforgeeks.org/find-significant-set-bit-number/
+//' @keywords internal
+// [[Rcpp::export]]
+int setBitNumber(int n) 
+{ 
+  // Below steps set bits after 
+  // MSB (including MSB) 
+  
+  // Suppose n is 273 (binary 
+  // is 100010001). It does following 
+  // 100010001 | 010001000 = 110011001 
+  n |= n >> 1; 
+  
+  // This makes sure 4 bits 
+  // (From MSB and including MSB) 
+  // are set. It does following 
+  // 110011001 | 001100110 = 111111111 
+  n |= n >> 2; 
+  
+  n |= n >> 4; 
+  n |= n >> 8; 
+  n |= n >> 16; 
+  
+  // Increment n by 1 so that 
+  // there is only one set bit 
+  // which is just before original 
+  // MSB. n now becomes 1000000000 
+  n = n + 1; 
+  
+  // Return original MSB after shifting. 
+  // n now becomes 100000000 
+  return (n >> 1); 
+} 
+
+//' Algorithm II (Local change-point search with SC)
 //' 
 //' Input cand: =mathcal D, conflicting changepoints candidate set
 //' Input sub_sums: Pre-computed partial sums, as obtained by extract_sub
@@ -132,38 +168,39 @@ double get_local_costs(unsigned icomb, const NumericMatrix &sub_sums) {
 //'       (+candidates)
 //' Input min_cost: Minimal RSS with all the candidates
 //' 
-//' Output bic: (Mx2) matrix (M=2^m with m=|cand|) containing RSS/cost and sBIC
+//' Output sc: (Mx2) matrix (M=2^m with m=|cand|) containing RSS/cost and SC
 //'         terms for all combinations within cand. Combinations are indexed
-//'         by their implicit integer representation, i.e. bic[0,] corresponds
-//'         to the empty set, bic[3,] to {k_1,k_2} [0..011], etc.
+//'         by their implicit integer representation, i.e. sc[0,] corresponds
+//'         to the empty set, sc[3,] to {k_1,k_2} [0..011], etc.
 //'         Note: Row May be Inf, if combination was not visited in algorithm.
 //' Output est_cpts: Integer Vector of estimated changepoints
 //' Output final: Bool Vector indicating if combinations are final states
 //' Output num_cpts: For debugging purposes
 //' @keywords internal
 // [[Rcpp::export]]
-List exhaust_bic(const IntegerVector &cand,
-                 const NumericMatrix &sub_sums,
-                 double strength,
-                 bool log_penalty,
-                 unsigned n,
-                 unsigned auc,
-                 double min_cost) {
+List exhaust_sc(const IntegerVector &cand,
+                const NumericMatrix &sub_sums,
+                double strength,
+                bool log_penalty,
+                unsigned n,
+                unsigned auc,
+                double min_cost) {
   const unsigned m = cand.length();
   const unsigned M = (1 << m);
   const double n_half = (double)n / 2.0;
   
-  const double sbic_penaly = (log_penalty ? 
-                                std::pow(std::log((double)n), strength) :
-                                std::pow((double)n,strength));
+  const double sc_penalty = (log_penalty ? 
+                               std::pow(std::log((double)n), strength) :
+                               std::pow((double)n, strength));
   
   const double INF = std::numeric_limits<double>::infinity();
   
   std::vector<bool> flag(M, true);
-  NumericVector sbic_vals(M, INF);
+  NumericVector sc_vals(M, INF);
   NumericVector cost_vals(M, INF); // local costs
   IntegerVector num_cpts(M, NA_INTEGER);
-  IntegerVector final(0);
+  std::vector<int> final(0);
+  int m_star = m;
   
   const double min_cost_local = sum(sub_sums(_,3) -
                                     sub_sums(_,2)*sub_sums(_,2) /
@@ -171,60 +208,57 @@ List exhaust_bic(const IntegerVector &cand,
   // M-1 [=1...1] represents ALL changes
   // 0 [=0...0] represents NO change
   cost_vals[M-1] = min_cost_local;
-  sbic_vals[M-1] = n_half * log(min_cost / double(n)) + auc*sbic_penaly;
+  sc_vals[M-1] = n_half * log(min_cost / double(n)) + auc*sc_penalty;
   num_cpts[M-1] = m;
   
   // iterate over all combination lengths
-  unsigned l=m;
+  int l = m;
   while (l > 0) {
     
     // iterate over all combinations of length l
     // step 1: pruning: inherit FALSE flags in next generation
     unsigned i_parent = start_bit_permutations(l);
-    
+    int count = 0;
     while (i_parent<M) {
       if (!flag[i_parent]) {
         for (unsigned i_child_help=0; i_child_help<m; ++i_child_help) {
           const unsigned i_child = i_parent^(1 << i_child_help);
-          if (is_child(i_child, i_parent)) {
-            flag[i_child] = false;
+          if(flag[i_child]){
+            if (is_child(i_child, i_parent)) flag[i_child] = false;
           }
         }
+      } else{
+        count += 1;
+        final.push_back(i_parent);
+        if(m_star > l) m_star = l;
       }
       i_parent = next_bit_permutation(i_parent);
     }
+    if(count == 0) break;
     
     // iterate over all combinations of length l
-    // step 2: Compute sBICs and update flags
+    // step 2: Compute SCs and update flags
     i_parent = start_bit_permutations(l);
-    while (i_parent<M) {
-      if (flag[i_parent]) {
-        bool final_parent = true;
+    while (i_parent < M) {
+      if(flag[i_parent]){
         for (unsigned i_child_help=0; i_child_help<m; ++i_child_help) {
           const unsigned i_child = i_parent^(1 << i_child_help);
           if (is_child(i_child, i_parent) && flag[i_child]) {
             
-            // step 2.1: compute sBIC
+            // step 2.1: compute SC
             if (cost_vals[i_child]==INF) {
               cost_vals[i_child] = get_local_costs(i_child, sub_sums);
               const double child_cost = min_cost - min_cost_local +
                 cost_vals[i_child];
               num_cpts[i_child] = l-1;
               const double child_auc = auc - m + num_cpts[i_child];
-              sbic_vals[i_child] = n_half * log(child_cost / double(n)) +
-                child_auc*sbic_penaly;
+              sc_vals[i_child] = n_half * std::log(child_cost / double(n)) +
+                child_auc*sc_penalty;
             }
             
             // step 2.2: pruning
-            if (sbic_vals[i_parent] < sbic_vals[i_child]) {
-              flag[i_child] = false;
-            } else {
-              final_parent = false;
-            }
+            if (sc_vals[i_parent] < sc_vals[i_child]) flag[i_child] = false;
           }
-        }
-        if (final_parent) {
-          final.push_back(i_parent);
         }
       }
       i_parent = next_bit_permutation(i_parent);
@@ -232,40 +266,104 @@ List exhaust_bic(const IntegerVector &cand,
     l -= 1;
   }
   
-  // index of final combination (minimize sbic, if several)
-  unsigned final_comb;
-  if (!final.length()) {
-    // empty set --> no cpt
-    final_comb = 0;
-  } else {
-    unsigned final_ind_star = 0;
-    for (int i=1; i<final.length(); ++i) {
-      if (sbic_vals[final[i]] < sbic_vals[final[final_ind_star]]) {
-        final_ind_star = i;
+  if((cost_vals[0]!=INF) & flag[0]) {
+    final.push_back(0);
+    m_star = 0;
+  }
+  
+  // index of final combination (minimize sc, if several)
+  unsigned final_ind_star = 0;
+  double min_sc = INF;
+  //unsigned j;
+  //for (int i = 0; i < final.size(); i++) {
+  // j = final[i];
+  //  if (num_cpts[j] >= m_star & num_cpts[j] <= m_star + 2){
+  //    if(sc_vals[j] < min_sc){
+  //      min_sc = sc_vals[j];
+  //      final_ind_star = j;    
+  //    }
+  //  }
+  //}
+  unsigned left, right, j, jj;
+  for (unsigned i = 0; i < final.size(); i++) {
+    j = final[i];
+    if ((num_cpts[j] >= m_star) & (num_cpts[j] <= m_star + 2)){
+      if(sc_vals[j] < min_sc){
+        min_sc = sc_vals[j];
+        final_ind_star = j;    
+      }
+      if(num_cpts[j] >= 1){
+        left = setBitNumber(j);
+        if(num_cpts[j] >= 2){
+          right = j^(j & (j - 1));  
+        } else{
+          right = left; 
+        }
+        jj = j - left;
+        if (cost_vals[jj]==INF) {
+          cost_vals[jj] = get_local_costs(jj, sub_sums);
+          const double child_cost = min_cost - min_cost_local + cost_vals[jj];
+          num_cpts[jj] = num_cpts[j] - 1;
+          const double child_auc = auc - m + num_cpts[jj];
+          sc_vals[jj] = n_half * std::log(child_cost / double(n)) + child_auc*sc_penalty;
+        }
+        if(sc_vals[jj] < min_sc){
+          min_sc = sc_vals[jj];
+          final_ind_star = jj;    
+        }
+        if(num_cpts[j] >= 2){
+          jj = j - right;
+          if (cost_vals[jj]==INF) {
+            cost_vals[jj] = get_local_costs(jj, sub_sums);
+            const double child_cost = min_cost - min_cost_local + cost_vals[jj];
+            num_cpts[jj] = num_cpts[j] - 1;
+            const double child_auc = auc - m + num_cpts[jj];
+            sc_vals[jj] = n_half * std::log(child_cost / double(n)) + child_auc*sc_penalty;
+          }
+          if(sc_vals[jj] < min_sc){
+            min_sc = sc_vals[jj];
+            final_ind_star = jj;    
+          }
+          jj = j - left - right;
+          if (cost_vals[jj]==INF) {
+            cost_vals[jj] = get_local_costs(jj, sub_sums);
+            const double child_cost = min_cost - min_cost_local + cost_vals[jj];
+            num_cpts[jj] = num_cpts[j] - 2;
+            const double child_auc = auc - m + num_cpts[jj];
+            sc_vals[jj] = n_half * std::log(child_cost / double(n)) + child_auc*sc_penalty;
+          }
+          if(sc_vals[jj] < min_sc){
+            min_sc = sc_vals[jj];
+            final_ind_star = jj;    
+          }
+        }
       }
     }
-    final_comb = final[final_ind_star];
   }
   
   // get estimated changepoints, accoring to final combination
-  IntegerVector est_cpts(numberOfSetBits(final_comb));
+  IntegerVector est_cpts(numberOfSetBits(final_ind_star));
   unsigned est_cpts_ind = 0;
   for (unsigned j=0; j<m; ++j) {
-    if (comb_contains_cpt(final_comb, j)) {
+    if (comb_contains_cpt(final_ind_star, j)) {
       est_cpts[est_cpts_ind] = cand[j];
       ++est_cpts_ind;
     }
   }
   
-  NumericMatrix bic(M, 2);
-  bic(_,0) = cost_vals;
-  bic(_,1) = sbic_vals;
+  NumericMatrix sc(M, 2);
+  sc(_,0) = cost_vals;
+  sc(_,1) = sc_vals;
   
   List res;
-  res["bic"] = bic;
+  res["sc"] = sc;
   res["est_cpts"] = est_cpts;
-  res["final"] = final_comb;
+  res["final"] = final_ind_star;
   res["num_cpts"] = num_cpts;
+  // remove
+  res["finals"] = final;
   
+
   return res;
 }
+

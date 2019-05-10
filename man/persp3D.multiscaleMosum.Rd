@@ -5,17 +5,17 @@
 \title{3D Visualisation of multiscale MOSUM statistics}
 \usage{
 persp3D.multiscaleMosum(x, mosum.args = list(),
-  threshold = c("critical.value", "custom")[1], alpha = 0.05,
+  threshold = c("critical.value", "custom")[1], alpha = 0.1,
   threshold.function = NULL, pal.name = "YlOrRd", expand = 0.2,
-  theta = 120, phi = 20, xlab = "G", ylab = "time", zlab = "MOSUM",
-  ticktype = "detailed", NAcol = "#800000FF", ...)
+  theta = 120, phi = 20, xlab = "G", ylab = "time",
+  zlab = "MOSUM", ticktype = "detailed", NAcol = "#800000FF", ...)
 }
 \arguments{
 \item{x}{a numeric input data vector}
 
 \item{mosum.args}{a named list containing further arguments
 to be parsed to the respective \code{mosum} function calls, see \link[mosum]{mosum};
-the bandwidths are chosen by default and should not be given as an argument in \code{mosum.args}}
+the bandwidths are chosen by the function and should not be given as an argument in \code{mosum.args}}
 
 \item{threshold}{string indicating which threshold should be used for normalisation of
 MOSUM statistics computed with different bandwidths.
@@ -23,7 +23,7 @@ By default, it is chosen from the asymptotic distribution at the given significa
 Alternatively it is possible to parse a user-defined numerical value with \code{threshold.custom}; see also Details.}
 
 \item{alpha}{a numeric value for the significance level with
-\code{0 <= alpha <= 1}; use iff \code{threshold='critical.value'}}
+\code{0 <= alpha <= 1}; use iff \code{threshold = "critical.value"}}
 
 \item{threshold.function}{function object of form \code{function(G)}, to compute a
 threshold of significance for different bandwidths G; use iff \code{threshold='custom'}}
@@ -54,9 +54,9 @@ see \link[plot3D]{persp3D}
 The visualisation is based on \link[plot3D]{persp3D}.
 MOSUM statistics computed with different bandwidths are rescaled
 for making them visually comparable.
-Rescaling is done either by their respective critical value to significance level \code{alpha}
-(iff \code{threshold=='critical.value'}) or by a custom value as given by \code{threshold.function}
-(iff \code{threshold=='custom'}).
+Rescaling is done either by dividing by their respective critical value at the significance level \code{alpha}
+(iff \code{threshold = "critical.value"}) or by a custom value given by \code{threshold.function}
+(iff \code{threshold = "custom"}).
 By default, \code{clim} argument of \link[plot3D]{persp3D} is given so that the three lightest 
 (for sequential palettes) hues indicate insignificance of the corresponding MOSUM statistics,
 while darker hues indicate the presence of significant changes.
@@ -64,9 +64,9 @@ while darker hues indicate the presence of significant changes.
 \examples{
 \dontrun{
 # If you run the example be aware that this may take some time
-print('example may take some time to run')
+print("example may take some time to run")
 
-x <- testData(model='blocks')
-persp3D.multiscaleMosum(x, mosum.args=list(boundary.extension=F))
+x <- testData(model = "blocks", seed = 1234)$x
+persp3D.multiscaleMosum(x, mosum.args = list(boundary.extension = FALSE))
 }
 }

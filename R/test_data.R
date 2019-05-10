@@ -1,24 +1,46 @@
 #' Test data with piecewise constant mean
 #' 
-#' Generate piecewise stationary time series with change-points in the mean.
+#' Generate piecewise stationary time series with independent innovations and change-points in the mean.
 #' @param model a string indicating from which model a realisation is to be generated;
-#' possible values are 'blocks', 'fms', 'mix', 'stairs10', 'teeth10'
-#' (for the referenced model signals) or 'custom' (for user specification 
-#' in terms of \code{lengths}, \code{means} and \code{sds})
-#' @param lengths use iff \code{model='custom'}; an integer vector for the lengths of the piecewise stationary segments
-#' @param means use iff \code{model='custom'}; a numeric vector for the means of the piecewise stationary segments
-#' @param sds use iff \code{model='custom'}; a numeric vector for the deviation scaling of the piecewise stationary segments.
+#' possible values are "custom" (for user-specified model
+#' using \code{lengths}, \code{means} and \code{sds}), and
+#' "blocks", "fms", "mix", "stairs10", "teeth10" (for the referenced test signals)
+#' @param lengths use iff \code{model = "custom"}; an integer vector for the lengths of the piecewise stationary segments
+#' @param means use iff \code{model = "custom"}; a numeric vector for the means of the piecewise stationary segments
+#' @param sds use iff \code{model = "custom"}; a numeric vector for the deviation scaling of the piecewise stationary segments.
 #' The values are multiplied to the outcome of \code{rand.gen}, coinciding with the standard
-#' deviation in case of standard normal innovations (\code{rand.gen=rnorm})
+#' deviation in the case of standard normal innovations (\code{rand.gen = rnorm})
 #' @param rand.gen optional; a function to generate the noise/innovations
 #' @param seed optional; if a seed value is provided (\code{!is.null(seed)}), 
 #' then \code{set.seed(seed)} is called beforehand)
 #' @param ... further arguments to be parsed to \code{rand.gen}
-#' @return numeric vector containing a realisation of the time series, given as signal+noise
-#' @details See Appendix B in the reference for details about the model time series.
+#' @return a list containing the following entries:
+#' \itemize{
+#' \item{x}{ a numeric vector containing a realisation of the piecewise time series model, 
+#' given as signal + noise}
+#' \item{mu}{ mean vector of piecewise stationary time series model }
+#' \item{sigma}{ scaling vector of piecewise stationary time series model }
+#' \item{cpts}{ a vector of change-points in the piecewise stationary time series model }
+#' }
+#' @details See Appendix B in the reference for details about the test signals.
 #' @references P. Fryzlewicz (2014)
 #' Wild Binary Segmentation for Multiple Change-Point Detection.
 #' \emph{The Annals of Statistics}, Volume 42, Number 6, pp. 2243-2281.
+#' @examples
+#' # visualise estimated changepoints by solid vertical lines
+#' # and true changepoints by broken vertical lines
+#' td <- testData(lengths = c(50, 50, 200, 300, 300), means = c(0, 1, 2, 3, 2.3), 
+#' sds = rep(1, 5), seed = 123)
+#' mbu <- multiscale.bottomUp(td$x)
+#' plot(mbu, display = "data")
+#' abline(v = td$cpts, col = 2, lwd = 2, lty = 2)
+#' 
+#' # visualise estimated piecewise constant signal by solid line
+#' # and true signal by broken line
+#' td <- testData("blocks", seed = 123)
+#' mlp <- multiscale.localPrune(td$x)
+#' plot(mlp, display = "data")
+#' lines(td$mu, col = 2, lwd = 2, lty = 2)
 #' @importFrom stats rnorm
 #' @export
 testData <- function(model=c('custom', 'blocks', 'fms', 'mix', 'stairs10', 'teeth10')[1],
@@ -30,29 +52,29 @@ testData <- function(model=c('custom', 'blocks', 'fms', 'mix', 'stairs10', 'teet
   signal <- testSignal(model=model, lengths=lengths, means=means, sds=sds)
   n <- length(signal$mu_t)
   ts <- signal$mu_t + rand.gen(n, ...)*signal$sigma_t
-  return(ts)
+  return(list(x = ts, mu = signal$mu_t, sigma = signal$sigma_t, cpts = which(diff(signal$mu_t) != 0)))
 }
 
 #' Piecewise constant test signal
 #' 
 #' Produce vectors of mean and dispersion values for generating piecewise stationary time series.
-#' @param model a string indicating which model is to be used; 
-#' possible values are 'blocks', 'fms', 'mix', 'stairs10', 'teeth10'
-#' (for the referenced model signals) or 'custom' (for user specification 
-#' in terms of \code{lengths}, \code{means} and \code{sds});
-#' @param lengths use iff \code{model='custom'}; an integer vector for the lengths of the piecewise stationary segments
-#' @param means use iff \code{model='custom'}; a numeric vector for the means of the piecewise stationary segments
-#' @param sds use iff \code{model='custom'}; a numeric vector for the deviation scaling of the piecewise stationary segments.
-#' The values are multiplied to the outcome of \code{rand.gen}, coinciding with the standard
-#' deviation in case of standard normal innovations (\code{rand.gen=rnorm})
+#' @param model a string indicating from which model a realisation is to be generated;
+#' possible values are "custom" (for user-specified model
+#' using \code{lengths}, \code{means} and \code{sds}), and
+#' "blocks", "fms", "mix", "stairs10", "teeth10" (for the referenced test signals)
+#' @param lengths use iff \code{model = "custom"}; an integer vector for the lengths of the piecewise stationary segments
+#' @param means use iff \code{model = "custom"}; a numeric vector for the means of the piecewise stationary segments
+#' @param sds use iff \code{model = "custom"}; a numeric vector for the deviation scaling of the piecewise stationary segments.
 #' @return a list containing the following entries:
-#'   \item{mu_t}{mean vector of piecewise stationary model time series}
-#'   \item{sigma_t}{deviation scaling vector of piecewise stationary model time series}
-#' @details See Appendix B in the reference for details about the model time series.
+#' \itemize{
+#'   \item{mu_t}{ mean vector of piecewise stationary model time series}
+#'   \item{sigma_t}{ deviation scaling vector of piecewise stationary model time series}
+#' }
+#' @details See Appendix B in the reference for details about the test signals.
 #' @references P. Fryzlewicz (2014)
 #' Wild Binary Segmentation for Multiple Change-Point Detection.
 #' \emph{The Annals of Statistics}, Volume 42, Number 6, pp. 2243-2281.
-#' @export
+#' @keywords internal 
 testSignal <- function(model=c('custom', 'blocks', 'fms', 'mix', 'stairs10', 'teeth10')[1],
                                        lengths=NULL, means=NULL, sds=NULL) {
   if (model=='blocks') {

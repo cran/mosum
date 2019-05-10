@@ -14,3 +14,8 @@
 \description{
 Print method for objects of class \code{multiscale.cpts}
 }
+\examples{
+x <- testData(model = "mix", seed = 12345)$x
+mlp <- multiscale.localPrune(x)
+print(mlp)
+}

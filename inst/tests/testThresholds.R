@@ -1,6 +1,6 @@
 N_TEST <- 20
 
-test_that("Custom threshold is consistent to critical value", {
+test_that("Custom threshold is consistent with asymptotic critical value", {
   for (i in 1:N_TEST) {
     ts <- list(testData(model="blocks"),
                testData(model="fms"),
@@ -14,21 +14,21 @@ test_that("Custom threshold is consistent to critical value", {
       G_right <- max(floor(runif(1, 20, 40)), ceiling(runif(1, 0.05*n, 0.2*n)))
       
       # Just re-define the critical value, but in 'custom' branch of code
-      threshold.custom <- mosumCriticalValue(n, G_left, G_right, alpha)
-      threshold.function1 <- function(G) { mosumCriticalValue(n,G,G,alpha) }
-      threshold.function2 <- function(G_l, G_r) { mosumCriticalValue(n,G_l,G_r,alpha) }
+      threshold.custom <- mosum.criticalValue(n, G_left, G_right, alpha)
+      threshold.function1 <- function(G, n, alpha) { mosum.criticalValue(n,G,G,alpha) }
+      threshold.function2 <- function(G_l, G_r, n, alpha) { mosum.criticalValue(n,G_l,G_r,alpha) }
       
       mcpts1 <- mosum(x, G_left, G.right=G_right, alpha=alpha)
-      mcpts2 <- multiscale.bottomUp.cpts(x, G=c(G_left,G_right), alpha=alpha)
-      mcpts3 <- multiscale.cpts(x, G=c(G_left,G_right), alpha=alpha)
+      mcpts2 <- multiscale.bottomUp(x, G=c(G_left,G_right), alpha=alpha)
+      mcpts3 <- multiscale.localPrune(x, G=c(G_left,G_right), alpha=alpha)
       
-      mcpts4 <- mosum(x, G_left, G.right=G_right, 
+      mcpts4 <- mosum(x, G_left, G.right=G_right, alpha=alpha, 
                            threshold="custom", 
                            threshold.custom=threshold.custom)
-      mcpts5 <- multiscale.bottomUp(x, G=c(G_left,G_right), 
+      mcpts5 <- multiscale.bottomUp(x, G=c(G_left,G_right), alpha=alpha, 
                                          threshold="custom", 
                                          threshold.function=threshold.function1)
-      mcpts6 <- multiscale.localPrune(x, G=c(G_left,G_right), 
+      mcpts6 <- multiscale.localPrune(x, G=c(G_left,G_right), alpha=alpha, 
                                 threshold="custom",
                                 threshold.function=threshold.function2)
 

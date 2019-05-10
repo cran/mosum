@@ -112,7 +112,7 @@ test_that("Multiscale merging with infinite penalty yields empty set", {
   }
 })
 
-test_that("Increased penaly does not increase number of cpts", {
+test_that("Increased penalty does not increase number of cpts", {
   sbic_strengths <- c(-Inf, 0, 1, 1.1, 1.5, 10, Inf)
   for (i in 1:N_TEST) {
     alpha <- runif(1, 0, 1)

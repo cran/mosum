@@ -8,9 +8,9 @@
 #' Alternatively it is possible to parse a user-defined numerical value with \code{threshold.custom}; see also Details.
 #' @param mosum.args a named list containing further arguments
 #' to be parsed to the respective \code{mosum} function calls, see \link[mosum]{mosum};
-#' the bandwidths are chosen by default and should not be given as an argument in \code{mosum.args}
+#' the bandwidths are chosen by the function and should not be given as an argument in \code{mosum.args}
 #' @param alpha a numeric value for the significance level with
-#' \code{0 <= alpha <= 1}; use iff \code{threshold='critical.value'}
+#' \code{0 <= alpha <= 1}; use iff \code{threshold = "critical.value"}
 #' @param threshold.function function object of form \code{function(G)}, to compute a
 #' threshold of significance for different bandwidths G; use iff \code{threshold='custom'}
 #' @param pal.name a string containing the name of the ColorBrewer palette to be used; 
@@ -26,26 +26,26 @@
 #' @details The visualisation is based on \link[plot3D]{persp3D}.
 #' MOSUM statistics computed with different bandwidths are rescaled
 #' for making them visually comparable.
-#' Rescaling is done either by their respective critical value to significance level \code{alpha}
-#' (iff \code{threshold=='critical.value'}) or by a custom value as given by \code{threshold.function}
-#' (iff \code{threshold=='custom'}).
+#' Rescaling is done either by dividing by their respective critical value at the significance level \code{alpha}
+#' (iff \code{threshold = "critical.value"}) or by a custom value given by \code{threshold.function}
+#' (iff \code{threshold = "custom"}).
 #' By default, \code{clim} argument of \link[plot3D]{persp3D} is given so that the three lightest 
 #' (for sequential palettes) hues indicate insignificance of the corresponding MOSUM statistics,
 #' while darker hues indicate the presence of significant changes.
 #' @examples
 #' \dontrun{
 #' # If you run the example be aware that this may take some time
-#' print('example may take some time to run')
+#' print("example may take some time to run")
 #' 
-#' x <- testData(model='blocks')
-#' persp3D.multiscaleMosum(x, mosum.args=list(boundary.extension=F))
+#' x <- testData(model = "blocks", seed = 1234)$x
+#' persp3D.multiscaleMosum(x, mosum.args = list(boundary.extension = FALSE))
 #' }
 #' @importFrom plot3D persp3D
 #' @importFrom RColorBrewer brewer.pal brewer.pal.info
 #' @export
 persp3D.multiscaleMosum <- function(x, mosum.args=list(), 
                                     threshold = c('critical.value', 'custom')[1],
-                                    alpha=0.05, threshold.function = NULL,
+                                    alpha=0.1, threshold.function = NULL,
                                     pal.name='YlOrRd',
                                     expand=.2, theta=120, phi=20, xlab='G', 
                                     ylab='time', zlab='MOSUM', ticktype='detailed', 
@@ -72,10 +72,14 @@ persp3D.multiscaleMosum <- function(x, mosum.args=list(),
     argList <- mosum.args
     argList$x <- x
     argList$G <- G
-    m[[i]] <- do.call(mosum.stat, argList)
+    if(threshold == "custom"){
+      argList$threshold <- "custom"
+      argList$threshold.custom <- threshold.function(G, n, alpha)
+    }
+    m[[i]] <- do.call(mosum, argList)
   }
   
-  zz <- t(sapply(m, function(z) z$stat / mosumCriticalValue(n, z$G.left, z$G.right, alpha)))
+  zz <- t(sapply(m, function(z) z$stat / z$threshold.value))
   xx <- grid$grid[,1]
   yy <- seq_len(length(x)) 
   persp3D(x=xx, y=yy, z=zz, expand=expand, 

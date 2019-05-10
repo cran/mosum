@@ -20,3 +20,8 @@ including the bandwidths used for its detection, associated p-value and (scaled)
 if \code{object$do.confint=TRUE}, end points of the pointwise and uniform confidence intervals
 are also provided.
 }
+\examples{
+x <- testData(model = "mix", seed = 12345)$x
+mlp <- multiscale.localPrune(x, do.confint = TRUE)
+summary(mlp)
+}

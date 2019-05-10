@@ -10,7 +10,7 @@
 \arguments{
 \item{object}{an object of class \code{mosum.cpts}}
 
-\item{parm}{specification of which parameters are to be given confidence intervals; \code{parm = 'cpts'} is supported}
+\item{parm}{specification of which parameters are to be given confidence intervals; \code{parm = "cpts"} is supported}
 
 \item{level}{numeric value in (0, 1), such that the \code{100(1-level)\%} confidence bootstrap intervals are computed}
 
@@ -19,15 +19,14 @@
 \item{...}{not in use}
 }
 \value{
-object of class \code{cpts.ci}, containing the following fields:
-   \item{level,level}{input parameters}
+S3 object of class \code{cpts.ci}, containing the following fields:
+   \item{level, N_reps}{input parameters}
    \item{CI}{data frame of five columns, 
-   containing the estimated change-points (column \code{cpt}),
+   containing the estimated change-points (column \code{cpts}),
    the pointwise confidence intervals 
    (columns \code{pw.left} and \code{pw.right})
    and the uniform confidence intervals 
-   (columns \code{unif.left} and \code{unif.right})}
-   for the corresponding change-points
+   (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
 }
 \description{
 Generate bootstrap confidence intervals for change-points.
@@ -36,18 +35,17 @@ Generate bootstrap confidence intervals for change-points.
 See the referenced literature for further details
 }
 \examples{
-set.seed(1337)
-x <- testData(lengths=rep(100, 3), means=c(0, 3, 1), sds=rep(1, 3))
-m <- mosum(x, G=40)
-ci <- confint(m, N_reps=5000)
+x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
+m <- mosum(x, G = 40)
+ci <- confint(m, N_reps = 5000)
 print(ci$CI)
 }
 \references{
-A. Meier, C. Kirch and H. Cho (2018+)
-mosum: A Package for Moving Sums in change-point Analysis.
+A. Meier, C. Kirch and H. Cho (2019+)
+mosum: A Package for Moving Sums in Change-point Analysis.
 \emph{Unpublished manuscript}.
 
-H. Cho and C. Kirch (2018+)
+H. Cho and C. Kirch (2019+)
 Multiple change-point detection via multiscale MOSUM procedure with localised pruning.
 \emph{Unpublished manuscript}.
 }

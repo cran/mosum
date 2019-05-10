@@ -69,7 +69,8 @@ test_that("MOSUM CPTS with relative and absolute bandwidths is consistent", {
     }
   }
 })
-test_that("Multiscale CPTS bottom up with relative and absolute bandwidths is consistent", {
+
+test_that("Multiscale MOSUM procedure with bottom-up merging with relative and absolute bandwidths is consistent", {
   for (i in seq_len(N_TEST)) {
 
     ts <- list(testData(model="blocks"),
@@ -92,26 +93,26 @@ test_that("Multiscale CPTS bottom up with relative and absolute bandwidths is co
     }
   }
 })
-test_that("Multiscale CPTS with relative and absolute bandwidths is consistent", {
-  for (i in seq_len(N_TEST)) {
-    ts <- list(testData(model="blocks"),
-               testData(model="fms"),
-               testData(model="mix"),
-               testData(model="stairs10"),
-               testData(model="teeth10"))
-    for (x in ts) {
-      n <- length(x)
-      G.left.rel <- runif(5, 0, 0.45)
-      G.left.abs <- floor(n * G.left.rel)
-      while (any(G.left.abs < 2)) {
-        G.left.rel <- runif(5, 0, 0.45)
-        G.left.abs <- floor(n * G.left.rel)
-      }
-      m.rel <- multiscale.localPrune(x, G.left.rel)
-      m.abs <- multiscale.localPrune(x, G.left.abs)
-      expect_equal(m.rel$cpts, m.abs$cpts)
-      expect_equal(m.rel$pooled.cpts, m.abs$pooled.cpts)
-    }
-  }
-})
+# test_that("Multiscale MOSUM procedure with localised pruning with relative and absolute bandwidths is consistent", {
+#   for (i in seq_len(N_TEST)) {
+#     ts <- list(testData(model="blocks"),
+#                testData(model="fms"),
+#                testData(model="mix"),
+#                testData(model="stairs10"),
+#                testData(model="teeth10"))
+#     for (x in ts) {
+#       n <- length(x)
+#       G.left.rel <- runif(5, 0, 0.45)
+#       G.left.abs <- floor(n * G.left.rel)
+#       while (any(G.left.abs < 2)) {
+#         G.left.rel <- runif(5, 0, 0.45)
+#         G.left.abs <- floor(n * G.left.rel)
+#       }
+#       m.rel <- multiscale.localPrune(x, G.left.rel)
+#       m.abs <- multiscale.localPrune(x, G.left.abs)
+#       expect_equal(m.rel$cpts, m.abs$cpts)
+#       expect_equal(m.rel$pooled.cpts, m.abs$pooled.cpts)
+#     }
+#   }
+# })
 

@@ -88,7 +88,14 @@ get_local_costs <- function(icomb, sub_sums) {
     .Call(`_mosum_get_local_costs`, icomb, sub_sums)
 }
 
-#' Algorithm II (Local change-point search with sBIC)
+#' where is leftmost one?
+#' https://www.geeksforgeeks.org/find-significant-set-bit-number/
+#' @keywords internal
+setBitNumber <- function(n) {
+    .Call(`_mosum_setBitNumber`, n)
+}
+
+#' Algorithm II (Local change-point search with SC)
 #' 
 #' Input cand: =mathcal D, conflicting changepoints candidate set
 #' Input sub_sums: Pre-computed partial sums, as obtained by extract_sub
@@ -99,17 +106,17 @@ get_local_costs <- function(icomb, sub_sums) {
 #'       (+candidates)
 #' Input min_cost: Minimal RSS with all the candidates
 #' 
-#' Output bic: (Mx2) matrix (M=2^m with m=|cand|) containing RSS/cost and sBIC
+#' Output sc: (Mx2) matrix (M=2^m with m=|cand|) containing RSS/cost and SC
 #'         terms for all combinations within cand. Combinations are indexed
-#'         by their implicit integer representation, i.e. bic[0,] corresponds
-#'         to the empty set, bic[3,] to {k_1,k_2} [0..011], etc.
+#'         by their implicit integer representation, i.e. sc[0,] corresponds
+#'         to the empty set, sc[3,] to {k_1,k_2} [0..011], etc.
 #'         Note: Row May be Inf, if combination was not visited in algorithm.
 #' Output est_cpts: Integer Vector of estimated changepoints
 #' Output final: Bool Vector indicating if combinations are final states
 #' Output num_cpts: For debugging purposes
 #' @keywords internal
-exhaust_bic <- function(cand, sub_sums, strength, log_penalty, n, auc, min_cost) {
-    .Call(`_mosum_exhaust_bic`, cand, sub_sums, strength, log_penalty, n, auc, min_cost)
+exhaust_sc <- function(cand, sub_sums, strength, log_penalty, n, auc, min_cost) {
+    .Call(`_mosum_exhaust_sc`, cand, sub_sums, strength, log_penalty, n, auc, min_cost)
 }
 
 #' equivalent to rollsum(x, k=G, fill=NA, align="left") in the package zoo, 

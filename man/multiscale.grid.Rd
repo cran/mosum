@@ -27,6 +27,6 @@ possible values are
 S3 \code{multiscale.grid} object to be used in the \code{multiscale.grid} function
 }
 \description{
-Create asymmetric bandwidth grids to be used with \code{multiscale.cpts}
+Create asymmetric bandwidth grids to be used with \code{multiscale.localPrune}
 }
 \keyword{internal}

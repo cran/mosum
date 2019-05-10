@@ -2,51 +2,65 @@
 #' 
 #' Multiscale MOSUM procedure with symmetric bandwidths combined with
 #' bottom-up bandwidth-based merging.
-#' @param x input data (\code{numeric} vector or object of class \code{ts})
-#' @param G a vector of (symmetric) bandwidths, given as either integers or numbers between 
-#' \code{0} and \code{0.5} describing the moving sum bandwidths relative to \code{length(x)}
+#' @param x input data (a \code{numeric} vector or an object of classes \code{ts} and \code{timeSeries})
+#' @param G a vector of (symmetric) bandwidths, given as either integers less than \code{length(x)/2},
+#' or numbers between \code{0} and \code{0.5} describing the moving sum bandwidths relative to \code{length(x)}.
+#' If the smallest bandwidth is smaller than \code{min(20, 0.05*length(x))} 
+#' (\code{0.05} if relative bandwidths are given) and \code{threshold = "critical.value"},
+#' it generates a warning message
 #' @param threshold string indicating which threshold should be used to determine significance.
 #' By default, it is chosen from the asymptotic distribution at the given significance level \code{alpha}.
 #' Alternatively, it is possible to parse a user-defined function with \code{threshold.function}
 #' @param alpha a numeric value for the significance level with
-#' \code{0 <= alpha <= 1}; use iff \code{threshold='critical.value'}
+#' \code{0 <= alpha <= 1}; use iff \code{threshold = "critical.value"}
 #' @param threshold.function function object of form \code{function(G, length(x), alpha)}, to compute a
-#' threshold of significance for different bandwidths G; use iff \code{threshold='custom'}
+#' threshold of significance for different bandwidths G; use iff \code{threshold = "custom"}
 #' @param eta see \link[mosum]{mosum}
 #' @param do.confint flag indicating whether to compute the confidence intervals for change-points
-#' @param level use iff \code{do.confint=TRUE}; a numeric value (\code{0 <= level <= 1}) with which
+#' @param level use iff \code{do.confint = TRUE}; a numeric value (\code{0 <= level <= 1}) with which
 #' \code{100(1-level)\%} confidence interval is generated
-#' @param N_reps use iff \code{do.confint=TRUE}; number of bootstrap replicates to be generated
+#' @param N_reps use iff \code{do.confint = TRUE}; number of bootstrap replicates to be generated
 #' @param ... further arguments to be passed to the \link[mosum]{mosum} calls
-#' @return S3 \code{multiscale.cpts} object, which contains the following fields:
+#' @return S3 object of class \code{multiscale.cpts}, which contains the following fields:
 #'    \item{x}{input data}
 #'    \item{cpts}{estimated change-points}
 #'    \item{cpts.info}{data frame containing information about estimated change-points}
 #'    \item{pooled.cpts}{set of change-point candidates that have been considered by the algorithm}
 #'    \item{G}{bandwidths}
-#'    \item{threshold,alpha,threshold.function}{input parameters}
+#'    \item{threshold, alpha, threshold.function}{input parameters}
 #'    \item{eta}{input parameters}
 #'    \item{do.confint}{input parameter}
-#'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint=TRUE}}
+#'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint = TRUE}}
 #' @details See Algorithm 1 in the first referenced paper for a comprehensive
 #' description of the procedure and further details.
-#' @references A. Meier, C. Kirch and H. Cho (2018+)
-#' mosum: A Package for Moving Sums in Change Point Analysis. \emph{Unpublished manuscript}.
+#' @references A. Meier, C. Kirch and H. Cho (2019+)
+#' mosum: A Package for Moving Sums in Change-point Analysis. \emph{Unpublished manuscript}.
 #' @references M. Messer et al. (2014)
 #' A multiple filter test for the detection of rate changes in renewal processes with varying variance.
 #' \emph{The Annals of Applied Statistics}, Volume 8, Number 4, pp. 2027-2067.
 #' @examples 
-#' x <- testData(lengths=c(50, 50, 200, 300, 300), means=c(0, 1, 2, 3, 2.3), sds=rep(1, 5))
-#' G <- (5:20)*5
-#' mbu <- multiscale.bottomUp(x, G=G, alpha=0.1)
-#' summary(mbu)
+#' x1 <- testData(lengths = c(100, 200, 300, 300), 
+#' means = c(0, 1, 2, 2.7), sds = rep(1, 4), seed = 123)$x
+#' mbu1 <- multiscale.bottomUp(x1)
+#' plot(mbu1)
+#' summary(mbu1)
+#' 
+#' x2 <- testData(model = "mix", seed = 1234)$x
+#' threshold.custom <- function(G, n, alpha) {
+#' mosum.criticalValue(n, G, G, alpha) * log(n/G)^0.1
+#' }
+#' mbu2 <- multiscale.bottomUp(x2, G = 10:40, threshold = "custom",
+#' threshold.function = threshold.custom)
+#' plot(mbu2)
+#' summary(mbu2)
+#' 
 #' @importFrom Rcpp evalCpp
 #' @useDynLib mosum, .registration = TRUE
 #' @export
-multiscale.bottomUp <- function(x, G=bandwidths.default(length(x)), 
+multiscale.bottomUp <- function(x, G=bandwidths.default(length(x), G.min = max(20, ceiling(0.05*length(x)))), 
                                 threshold = c('critical.value', 'custom')[1], 
-                                alpha=0.05, threshold.function = NULL, eta=0.4, 
-                                do.confint=F, level=0.05, N_reps=1000, ...) {
+                                alpha=0.1, threshold.function = NULL, eta=0.4, 
+                                do.confint=FALSE, level=0.05, N_reps=1000, ...) {
   n <- length(x)
 
   if (class(G) == 'integer' || class(G) == 'numeric') {
@@ -65,9 +79,8 @@ multiscale.bottomUp <- function(x, G=bandwidths.default(length(x)),
     GRID_THRESH <- 0.05
   }
   
-  if (min(grid$grid) < GRID_THRESH) {
-    print('Warning: Smallest bandwidth in grid is relatively small (in comparison to n)')
-    # warning('Smallest bandwidth in grid is relatively small (in comparison to n)')
+  if (threshold == 'critical.value' & min(grid$grid) < GRID_THRESH) {
+     warning('Smallest bandwidth in grid is relatively small (in comparison to n), \n increase the smallest bandwidth or use multiscale.localPrune instead')
   }
   if (threshold != 'critical.value' && threshold != 'custom') {
     stop('threshold must be either \'critical.value\' or \'custom\'')
@@ -133,11 +146,12 @@ multiscale.bottomUp <- function(x, G=bandwidths.default(length(x)),
                         threshold.function=threshold.function,
                         criterion='eta',
                         eta=eta,
-                        do.confint=F,
+                        do.confint=FALSE,
                         ci=NA), # note 
                    class='multiscale.cpts')
   if (do.confint) {
     ret$ci <- confint.multiscale.cpts(ret, level=level, N_reps=N_reps)
+    ret$do.confint <- TRUE
   }
   ret
 }
