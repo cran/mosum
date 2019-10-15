@@ -7,6 +7,7 @@
 #' Alternatively, a number between \code{0} and \code{0.5} describing the moving sum bandwidth
 #' relative to \code{length(x)} can be given
 #' @param G.right if \code{G.right != G}, the asymmetric bandwidth \code{(G, G.right)} will be used;
+#' if \code{max(G, G.right)/min(G, G.right) > 4}, a warning message is generated
 #' @param var.est.method how the variance is estimated;
 #' possible values are
 #' \itemize{
@@ -55,7 +56,7 @@
 #'    \item{do.confint}{input parameter}
 #'    \item{ci}{S3 object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint=TRUE}}
 #' @references A. Meier, C. Kirch and H. Cho (2019+)
-#' mosum: A Package for Moving Sums in Change-Point Analysis. \emph{Unpublished manuscript}.
+#' mosum: A Package for Moving Sums in Change-Point Analysis. \emph{To appear in the Journal of Statistical Software}.
 #' @references B. Eichinger and C. Kirch (2018)
 #' A MOSUM procedure for the estimation of multiple random change-points.
 #' \emph{Bernoulli}, Volume 24, Number 1, pp. 526-564.
@@ -89,6 +90,10 @@ mosum <- function(x, G, G.right=G,
   G.max <- max(G.right, G.left)
   K <- G.min / G.max
   changePoints <- numeric(0)
+  
+  if (threshold == 'critical.value' & G.max/G.min > 4) {
+    warning('Bandwidths are too unbalanced, \n (G, G.right) satisfying max(G, G.right)/min(G, G.right) <= 4 is recommended')
+  }
   
   if (threshold == 'critical.value') {
     threshold_val <- mosum.criticalValue(n, G.left, G.right, alpha)

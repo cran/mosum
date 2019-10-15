@@ -9,6 +9,10 @@
 #' with G_0 = G_1 = max(\code{G.min}, 2/3*\code{d.min}), G_{j+1} = G_{j-1} + G_j (for j = 1, ..., m-1)
 #' and m satisfying G_m <= \code{G.max} while G_{m+1} > \code{G.max}.
 #' @return an integer vector of bandwidths
+#' @references A. Meier, C. Kirch and H. Cho (2019+)
+#' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
+#' @references H. Cho and C. Kirch (2019+)
+#' Localised pruning for data segmentation based on multiscale change point procedures. \emph{Unpublished manuscript}.
 #' @examples 
 #' bandwidths.default(1000, 10, 10, 200)
 #' @export

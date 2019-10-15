@@ -16,10 +16,7 @@
 #'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
 #' @details See the referenced literature for further details
 #' @references A. Meier, C. Kirch and H. Cho (2019+)
-#' mosum: A Package for Moving Sums in Change-point Analysis.
-#' \emph{Unpublished manuscript}.
-#' @references H. Cho and C. Kirch (2019+)
-#' Multiple change-point detection via multiscale MOSUM procedure with localised pruning.
+#' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 #' \emph{Unpublished manuscript}.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
@@ -67,11 +64,7 @@ confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, .
 #'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
 #' @details See the referenced literature for further details
 #' @references A. Meier, C. Kirch and H. Cho (2019+)
-#' mosum: A Package for Moving Sums in Change-point Analysis.
-#' \emph{Unpublished manuscript}.
-#' @references H. Cho and C. Kirch (2019+)
-#' Multiple change-point detection via multiscale MOSUM procedure with localised pruning.
-#' \emph{Unpublished manuscript}.
+#' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
 #' mlp <-  multiscale.localPrune(x, G = c(8, 15, 30, 70))

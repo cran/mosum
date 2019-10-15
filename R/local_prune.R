@@ -5,6 +5,8 @@
 #' @param G a vector of bandwidths, given as either integers less than \code{length(x)/2}, 
 #' or numbers between \code{0} and \code{0.5} describing the moving sum bandwidths relative to \code{length(x)}.
 #' Asymmetric bandwidths obtained as the Cartesian product of the set \code{G} with itself are used for change-point analysis
+#' @param max.unbalance a numeric value for the maximal ratio between maximal and minimal bandwidths to be used for candidate generation,
+#' \code{1 <= max.unbalance <= Inf}
 #' @param threshold string indicating which threshold should be used to determine significance.
 #' By default, it is chosen from the asymptotic distribution at the significance level \code{alpha}.
 #' Alternatively, it is possible to parse a user-defined function with \code{threshold.function}
@@ -46,9 +48,9 @@
 #' @details See Algorithm 2 in the first referenced paper for a comprehensive
 #' description of the procedure and further details.
 #' @references A. Meier, C. Kirch and H. Cho (2019+)
-#' mosum: A Package for Moving Sums in Change-point Analysis. \emph{Unpublished manuscript}.
+#' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 #' @references H. Cho and C. Kirch (2019+)
-#' Multiple change-point detection via multiscale MOSUM procedure with localised pruning. \emph{Unpublished manuscript}.
+#' Localised pruning for data segmentation based on multiscale change point procedures. \emph{Unpublished manuscript}.
 #' @examples 
 #' x <- testData(model = "mix", seed = 123)$x
 #' mlp <- multiscale.localPrune(x, G = c(8, 15, 30, 70), do.confint = TRUE)
@@ -60,7 +62,7 @@
 #' @importFrom Rcpp evalCpp
 #' @useDynLib mosum, .registration = TRUE
 #' @export
-multiscale.localPrune <- function(x, G=bandwidths.default(length(x)),
+multiscale.localPrune <- function(x, G=bandwidths.default(length(x)), max.unbalance = 4,
                             threshold=c('critical.value', 'custom')[1], alpha=.1, threshold.function = NULL,
                             criterion=c('eta', 'epsilon')[1], eta=0.4, epsilon=0.2,
                             rule=c('pval', 'jump')[1], penalty=c('log', 'polynomial')[1], pen.exp=1.01,
@@ -69,12 +71,13 @@ multiscale.localPrune <- function(x, G=bandwidths.default(length(x)),
   n <- length(x)
   
   if (class(G) == "integer" || class(G) == "numeric") {
-    grid <- multiscale.grid(G)
+    grid <- multiscale.grid(G, max.unbalance = max.unbalance)
   } else if(class(G) == 'multiscale.grid'){
     grid <- G
   } else stop('Expecting a vector of numbers')
   abs.bandwidth <- all(grid$grid>=1)
   
+  stopifnot(max.unbalance >= 1)
   stopifnot(is.element(rule, c('pval', 'jump', 'lr', 'rl')))
   stopifnot(is.element(criterion, c('eta', 'epsilon')))
   stopifnot((criterion=='eta' & eta <= 1 & eta > 0) || (criterion=='epsilon' & epsilon <= 1 & epsilon > 0))

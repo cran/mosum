@@ -19,7 +19,8 @@ mosum(x, G, G.right = G, var.est.method = c("mosum", "mosum.min",
 Alternatively, a number between \code{0} and \code{0.5} describing the moving sum bandwidth
 relative to \code{length(x)} can be given}
 
-\item{G.right}{if \code{G.right != G}, the asymmetric bandwidth \code{(G, G.right)} will be used;}
+\item{G.right}{if \code{G.right != G}, the asymmetric bandwidth \code{(G, G.right)} will be used;
+if \code{max(G, G.right)/min(G, G.right) > 4}, a warning message is generated}
 
 \item{var.est.method}{how the variance is estimated;
 possible values are
@@ -93,7 +94,7 @@ summary(m)
 }
 \references{
 A. Meier, C. Kirch and H. Cho (2019+)
-mosum: A Package for Moving Sums in Change-Point Analysis. \emph{Unpublished manuscript}.
+mosum: A Package for Moving Sums in Change-Point Analysis. \emph{To appear in the Journal of Statistical Software}.
 
 B. Eichinger and C. Kirch (2018)
 A MOSUM procedure for the estimation of multiple random change-points.

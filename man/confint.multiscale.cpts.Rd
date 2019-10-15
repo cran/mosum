@@ -42,10 +42,5 @@ print(ci$CI)
 }
 \references{
 A. Meier, C. Kirch and H. Cho (2019+)
-mosum: A Package for Moving Sums in Change-point Analysis.
-\emph{Unpublished manuscript}.
-
-H. Cho and C. Kirch (2019+)
-Multiple change-point detection via multiscale MOSUM procedure with localised pruning.
-\emph{Unpublished manuscript}.
+mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 }

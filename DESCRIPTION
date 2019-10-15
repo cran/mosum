@@ -1,7 +1,7 @@
 Package: mosum
 Title: Moving Sum Based Procedures for Changes in the Mean
-Version: 1.2.1
-Date: 2019-05-08
+Version: 1.2.2
+Date: 2019-10-01
 Authors@R: c(
   person("Alexander", "Meier", email = "meier.alexander@posteo.de", role="aut"),
   person("Haeran", "Cho", email = "haeran.cho@bristol.ac.uk", role=c("aut", "cre")),
@@ -16,9 +16,9 @@ Maintainer: Haeran Cho <haeran.cho@bristol.ac.uk>
 RoxygenNote: 6.1.1
 Encoding: UTF-8
 NeedsCompilation: yes
-Packaged: 2019-05-09 16:55:31 UTC; h
+Packaged: 2019-10-03 12:16:06 UTC; h
 Author: Alexander Meier [aut],
   Haeran Cho [aut, cre],
   Claudia Kirch [aut]
 Repository: CRAN
-Date/Publication: 2019-05-10 10:10:14 UTC
+Date/Publication: 2019-10-15 10:50:02 UTC

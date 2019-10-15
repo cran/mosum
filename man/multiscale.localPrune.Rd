@@ -5,10 +5,10 @@
 \title{Multiscale MOSUM algorithm with localised pruning}
 \usage{
 multiscale.localPrune(x, G = bandwidths.default(length(x)),
-  threshold = c("critical.value", "custom")[1], alpha = 0.1,
-  threshold.function = NULL, criterion = c("eta", "epsilon")[1],
-  eta = 0.4, epsilon = 0.2, rule = c("pval", "jump")[1],
-  penalty = c("log", "polynomial")[1], pen.exp = 1.01,
+  max.unbalance = 4, threshold = c("critical.value", "custom")[1],
+  alpha = 0.1, threshold.function = NULL, criterion = c("eta",
+  "epsilon")[1], eta = 0.4, epsilon = 0.2, rule = c("pval",
+  "jump")[1], penalty = c("log", "polynomial")[1], pen.exp = 1.01,
   do.confint = FALSE, level = 0.05, N_reps = 1000, ...)
 }
 \arguments{
@@ -17,6 +17,9 @@ multiscale.localPrune(x, G = bandwidths.default(length(x)),
 \item{G}{a vector of bandwidths, given as either integers less than \code{length(x)/2}, 
 or numbers between \code{0} and \code{0.5} describing the moving sum bandwidths relative to \code{length(x)}.
 Asymmetric bandwidths obtained as the Cartesian product of the set \code{G} with itself are used for change-point analysis}
+
+\item{max.unbalance}{a numeric value for the maximal ratio between maximal and minimal bandwidths to be used for candidate generation,
+\code{1 <= max.unbalance <= Inf}}
 
 \item{threshold}{string indicating which threshold should be used to determine significance.
 By default, it is chosen from the asymptotic distribution at the significance level \code{alpha}.
@@ -88,8 +91,8 @@ plot(mlp, display = "significance", shaded = "CI", CI = "unif")
 }
 \references{
 A. Meier, C. Kirch and H. Cho (2019+)
-mosum: A Package for Moving Sums in Change-point Analysis. \emph{Unpublished manuscript}.
+mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 
 H. Cho and C. Kirch (2019+)
-Multiple change-point detection via multiscale MOSUM procedure with localised pruning. \emph{Unpublished manuscript}.
+Localised pruning for data segmentation based on multiscale change point procedures. \emph{Unpublished manuscript}.
 }
