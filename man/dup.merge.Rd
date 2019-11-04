@@ -4,13 +4,13 @@
 \alias{dup.merge}
 \title{Remove duplicated from all.cpts data frame:
 In case one change being added multiple times, choose the one
-with smallest p-value (resp. highest jump)}
+with smallest p-value}
 \usage{
-dup.merge(all.cpts, rule = "jump")
+dup.merge(all.cpts)
 }
 \description{
 Remove duplicated from all.cpts data frame:
 In case one change being added multiple times, choose the one
-with smallest p-value (resp. highest jump)
+with smallest p-value
 }
 \keyword{internal}

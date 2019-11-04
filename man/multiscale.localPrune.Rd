@@ -90,9 +90,9 @@ plot(mlp, display = "data", shaded = "none")
 plot(mlp, display = "significance", shaded = "CI", CI = "unif")
 }
 \references{
-A. Meier, C. Kirch and H. Cho (2019+)
+A. Meier, C. Kirch and H. Cho (2019)
 mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 
-H. Cho and C. Kirch (2019+)
-Localised pruning for data segmentation based on multiscale change point procedures. \emph{Unpublished manuscript}.
+H. Cho and C. Kirch (2019)
+Localised pruning for data segmentation based on multiscale change point procedures. \emph{arXiv preprint arXiv:1910.12486}.
 }

@@ -15,9 +15,8 @@
 #'    and the uniform confidence intervals 
 #'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
 #' @details See the referenced literature for further details
-#' @references A. Meier, C. Kirch and H. Cho (2019+)
+#' @references A. Meier, C. Kirch and H. Cho (2019)
 #' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
-#' \emph{Unpublished manuscript}.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
 #' m <- mosum(x, G = 40)
@@ -63,7 +62,7 @@ confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, .
 #'    and the uniform confidence intervals 
 #'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
 #' @details See the referenced literature for further details
-#' @references A. Meier, C. Kirch and H. Cho (2019+)
+#' @references A. Meier, C. Kirch and H. Cho (2019)
 #' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x

@@ -47,10 +47,10 @@
 #'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint = TRUE}}
 #' @details See Algorithm 2 in the first referenced paper for a comprehensive
 #' description of the procedure and further details.
-#' @references A. Meier, C. Kirch and H. Cho (2019+)
+#' @references A. Meier, C. Kirch and H. Cho (2019)
 #' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
-#' @references H. Cho and C. Kirch (2019+)
-#' Localised pruning for data segmentation based on multiscale change point procedures. \emph{Unpublished manuscript}.
+#' @references H. Cho and C. Kirch (2019)
+#' Localised pruning for data segmentation based on multiscale change point procedures. \emph{arXiv preprint arXiv:1910.12486}.
 #' @examples 
 #' x <- testData(model = "mix", seed = 123)$x
 #' mlp <- multiscale.localPrune(x, G = c(8, 15, 30, 70), do.confint = TRUE)
@@ -123,7 +123,7 @@ multiscale.localPrune <- function(x, G=bandwidths.default(length(x)), max.unbala
   }
 
   all.cpts <- all.cpts[sort(all.cpts[, 1], decreasing=FALSE, index.return=TRUE)$ix,,drop=FALSE]
-  all.cpts <- dup.merge(all.cpts, rule) # if there are duplicates, only select one according to 'rule'
+  all.cpts <- dup.merge(all.cpts) # if there are duplicates, only select one according to 'rule'
   ac <- nrow(all.cpts)
   if(ac > 0){
     lp <- local.prune(x, all.cpts, rule, log.penalty, pen.exp)
@@ -364,20 +364,32 @@ local.env <- function(j, est.cpts.ind, all.cpts, current, ac){
 
 #' Remove duplicated from all.cpts data frame:
 #' In case one change being added multiple times, choose the one
-#' with smallest p-value (resp. highest jump)
+#' with smallest p-value 
 #' @keywords internal
-dup.merge <- function(all.cpts, rule='jump') {
+dup.merge <- function(all.cpts) {
   all.unique.cpts <- unique(all.cpts[, 1, drop=FALSE])
   out <- matrix(NA, nrow=0, ncol=ncol(all.cpts))
   for(k in all.unique.cpts){
     ind <- which(all.cpts[, 1]==k)
-    ind.min <- ind[all.cpts[ind, 4]==min(all.cpts[ind, 4])]
-    if(length(ind.min) > 1 & rule=='pval') ind.min <- ind.min[which.min(all.cpts[ind.min, 5])] 
-    if(length(ind.min) > 1 & rule=='jump') ind.min <- ind.min[which.max(all.cpts[ind.min, 6])] 
+    ind.min <- ind[all.cpts[ind, 5]==min(all.cpts[ind, 5])]
+    if(length(ind.min) > 1) ind.min <- ind.min[which.min(all.cpts[ind.min, 4])]
     out <- rbind(out, all.cpts[ind.min,])
   }
   out
 }
+
+# dup.merge <- function(all.cpts, rule='jump') {
+#   all.unique.cpts <- unique(all.cpts[, 1, drop=FALSE])
+#   out <- matrix(NA, nrow=0, ncol=ncol(all.cpts))
+#   for(k in all.unique.cpts){
+#     ind <- which(all.cpts[, 1]==k)
+#     ind.min <- ind[all.cpts[ind, 4]==min(all.cpts[ind, 4])]
+#     if(length(ind.min) > 1 & rule=='pval') ind.min <- ind.min[which.min(all.cpts[ind.min, 5])]
+#     if(length(ind.min) > 1 & rule=='jump') ind.min <- ind.min[which.max(all.cpts[ind.min, 6])]
+#     out <- rbind(out, all.cpts[ind.min,])
+#   }
+#   out
+# }
 
 #' Plotting the output from multiscale MOSUM procedure
 #' 

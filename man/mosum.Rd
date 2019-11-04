@@ -93,7 +93,7 @@ plot(m)
 summary(m)
 }
 \references{
-A. Meier, C. Kirch and H. Cho (2019+)
+A. Meier, C. Kirch and H. Cho (2019)
 mosum: A Package for Moving Sums in Change-Point Analysis. \emph{To appear in the Journal of Statistical Software}.
 
 B. Eichinger and C. Kirch (2018)

@@ -31,9 +31,9 @@ and m satisfying G_m <= \code{G.max} while G_{m+1} > \code{G.max}.
 bandwidths.default(1000, 10, 10, 200)
 }
 \references{
-A. Meier, C. Kirch and H. Cho (2019+)
+A. Meier, C. Kirch and H. Cho (2019)
 mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 
-H. Cho and C. Kirch (2019+)
-Localised pruning for data segmentation based on multiscale change point procedures. \emph{Unpublished manuscript}.
+H. Cho and C. Kirch (2019)
+Localised pruning for data segmentation based on multiscale change point procedures. \emph{arXiv preprint arXiv:1910.12486}.
 }

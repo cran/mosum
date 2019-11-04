@@ -41,7 +41,6 @@ ci <- confint(m, N_reps = 5000)
 print(ci$CI)
 }
 \references{
-A. Meier, C. Kirch and H. Cho (2019+)
+A. Meier, C. Kirch and H. Cho (2019)
 mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
-\emph{Unpublished manuscript}.
 }

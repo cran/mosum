@@ -33,7 +33,7 @@
 #'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint = TRUE}}
 #' @details See Algorithm 1 in the first referenced paper for a comprehensive
 #' description of the procedure and further details.
-#' @references A. Meier, C. Kirch and H. Cho (2019+)
+#' @references A. Meier, C. Kirch and H. Cho (2019)
 #' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 #' @references M. Messer et al. (2014)
 #' A multiple filter test for the detection of rate changes in renewal processes with varying variance.
