@@ -4,8 +4,14 @@
 \alias{plot.mosum.cpts}
 \title{Plotting the output from MOSUM procedure}
 \usage{
-\method{plot}{mosum.cpts}(x, display = c("data", "mosum")[1],
-  cpts.col = "red", critical.value.col = "blue", xlab = "Time", ...)
+\method{plot}{mosum.cpts}(
+  x,
+  display = c("data", "mosum")[1],
+  cpts.col = "red",
+  critical.value.col = "blue",
+  xlab = "Time",
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{mosum.cpts} object}

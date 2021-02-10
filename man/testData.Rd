@@ -4,9 +4,15 @@
 \alias{testData}
 \title{Test data with piecewise constant mean}
 \usage{
-testData(model = c("custom", "blocks", "fms", "mix", "stairs10",
-  "teeth10")[1], lengths = NULL, means = NULL, sds = NULL,
-  rand.gen = rnorm, seed = NULL, ...)
+testData(
+  model = c("custom", "blocks", "fms", "mix", "stairs10", "teeth10")[1],
+  lengths = NULL,
+  means = NULL,
+  sds = NULL,
+  rand.gen = rnorm,
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{model}{a string indicating from which model a realisation is to be generated;

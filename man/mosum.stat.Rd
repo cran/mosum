@@ -4,8 +4,14 @@
 \alias{mosum.stat}
 \title{MOSUM statistic}
 \usage{
-mosum.stat(x, G, G.right = NA, var.est.method = "mosum",
-  var.custom = NULL, boundary.extension = TRUE)
+mosum.stat(
+  x,
+  G,
+  G.right = NA,
+  var.est.method = "mosum",
+  var.custom = NULL,
+  boundary.extension = TRUE
+)
 }
 \arguments{
 \item{x}{input data (\code{numeric} vector or object of class \code{ts})}

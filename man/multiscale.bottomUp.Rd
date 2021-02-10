@@ -4,10 +4,18 @@
 \alias{multiscale.bottomUp}
 \title{Multiscale MOSUM algorithm with bottom-up merging}
 \usage{
-multiscale.bottomUp(x, G = bandwidths.default(length(x), G.min = max(20,
-  ceiling(0.05 * length(x)))), threshold = c("critical.value",
-  "custom")[1], alpha = 0.1, threshold.function = NULL, eta = 0.4,
-  do.confint = FALSE, level = 0.05, N_reps = 1000, ...)
+multiscale.bottomUp(
+  x,
+  G = bandwidths.default(length(x), G.min = max(20, ceiling(0.05 * length(x)))),
+  threshold = c("critical.value", "custom")[1],
+  alpha = 0.1,
+  threshold.function = NULL,
+  eta = 0.4,
+  do.confint = FALSE,
+  level = 0.05,
+  N_reps = 1000,
+  ...
+)
 }
 \arguments{
 \item{x}{input data (a \code{numeric} vector or an object of classes \code{ts} and \code{timeSeries})}

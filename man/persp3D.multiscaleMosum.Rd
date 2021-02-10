@@ -4,11 +4,23 @@
 \alias{persp3D.multiscaleMosum}
 \title{3D Visualisation of multiscale MOSUM statistics}
 \usage{
-persp3D.multiscaleMosum(x, mosum.args = list(),
-  threshold = c("critical.value", "custom")[1], alpha = 0.1,
-  threshold.function = NULL, pal.name = "YlOrRd", expand = 0.2,
-  theta = 120, phi = 20, xlab = "G", ylab = "time",
-  zlab = "MOSUM", ticktype = "detailed", NAcol = "#800000FF", ...)
+persp3D.multiscaleMosum(
+  x,
+  mosum.args = list(),
+  threshold = c("critical.value", "custom")[1],
+  alpha = 0.1,
+  threshold.function = NULL,
+  pal.name = "YlOrRd",
+  expand = 0.2,
+  theta = 120,
+  phi = 20,
+  xlab = "G",
+  ylab = "time",
+  zlab = "MOSUM",
+  ticktype = "detailed",
+  NAcol = "#800000FF",
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric input data vector}

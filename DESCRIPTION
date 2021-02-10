@@ -1,7 +1,7 @@
 Package: mosum
 Title: Moving Sum Based Procedures for Changes in the Mean
-Version: 1.2.3
-Date: 2019-10-21
+Version: 1.2.4
+Date: 2021-02-05
 Authors@R: c(
   person("Alexander", "Meier", email = "meier.alexander@posteo.de", role="aut"),
   person("Haeran", "Cho", email = "haeran.cho@bristol.ac.uk", role=c("aut", "cre")),
@@ -13,12 +13,12 @@ LazyData: true
 Imports: RColorBrewer, plot3D, Rcpp (>= 0.12.5)
 LinkingTo: Rcpp
 Maintainer: Haeran Cho <haeran.cho@bristol.ac.uk>
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Encoding: UTF-8
 NeedsCompilation: yes
-Packaged: 2019-11-04 14:04:01 UTC; mahrc
+Packaged: 2021-02-05 16:38:42 UTC; mahrc
 Author: Alexander Meier [aut],
   Haeran Cho [aut, cre],
   Claudia Kirch [aut]
 Repository: CRAN
-Date/Publication: 2019-11-04 14:30:02 UTC
+Date/Publication: 2021-02-10 15:30:02 UTC

@@ -4,12 +4,23 @@
 \alias{mosum}
 \title{MOSUM procedure for multiple change-point estimation}
 \usage{
-mosum(x, G, G.right = G, var.est.method = c("mosum", "mosum.min",
-  "mosum.max", "custom")[1], var.custom = NULL,
-  boundary.extension = TRUE, threshold = c("critical.value",
-  "custom")[1], alpha = 0.1, threshold.custom = NULL,
-  criterion = c("eta", "epsilon")[1], eta = 0.4, epsilon = 0.2,
-  do.confint = FALSE, level = 0.05, N_reps = 1000)
+mosum(
+  x,
+  G,
+  G.right = G,
+  var.est.method = c("mosum", "mosum.min", "mosum.max", "custom")[1],
+  var.custom = NULL,
+  boundary.extension = TRUE,
+  threshold = c("critical.value", "custom")[1],
+  alpha = 0.1,
+  threshold.custom = NULL,
+  criterion = c("eta", "epsilon")[1],
+  eta = 0.4,
+  epsilon = 0.2,
+  do.confint = FALSE,
+  level = 0.05,
+  N_reps = 1000
+)
 }
 \arguments{
 \item{x}{input data (a \code{numeric} vector or an object of classes \code{ts} and \code{timeSeries})}

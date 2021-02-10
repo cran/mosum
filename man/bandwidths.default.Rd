@@ -4,8 +4,7 @@
 \alias{bandwidths.default}
 \title{Default choice for the set of multiple bandwidths}
 \usage{
-bandwidths.default(n, d.min = 10, G.min = 10, G.max = min(n/2,
-  n^(2/3)))
+bandwidths.default(n, d.min = 10, G.min = 10, G.max = min(n/2, n^(2/3)))
 }
 \arguments{
 \item{n}{integer representing the sample size}
@@ -34,6 +33,6 @@ bandwidths.default(1000, 10, 10, 200)
 A. Meier, C. Kirch and H. Cho (2019)
 mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 
-H. Cho and C. Kirch (2019)
-Localised pruning for data segmentation based on multiscale change point procedures. \emph{arXiv preprint arXiv:1910.12486}.
+H. Cho and C. Kirch (2020)
+Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
 }

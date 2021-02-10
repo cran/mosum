@@ -11,8 +11,8 @@
 #' @return an integer vector of bandwidths
 #' @references A. Meier, C. Kirch and H. Cho (2019)
 #' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
-#' @references H. Cho and C. Kirch (2019)
-#' Localised pruning for data segmentation based on multiscale change point procedures. \emph{arXiv preprint arXiv:1910.12486}.
+#' @references H. Cho and C. Kirch (2020)
+#' Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
 #' @examples 
 #' bandwidths.default(1000, 10, 10, 200)
 #' @export

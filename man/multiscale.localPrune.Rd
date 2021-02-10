@@ -4,12 +4,24 @@
 \alias{multiscale.localPrune}
 \title{Multiscale MOSUM algorithm with localised pruning}
 \usage{
-multiscale.localPrune(x, G = bandwidths.default(length(x)),
-  max.unbalance = 4, threshold = c("critical.value", "custom")[1],
-  alpha = 0.1, threshold.function = NULL, criterion = c("eta",
-  "epsilon")[1], eta = 0.4, epsilon = 0.2, rule = c("pval",
-  "jump")[1], penalty = c("log", "polynomial")[1], pen.exp = 1.01,
-  do.confint = FALSE, level = 0.05, N_reps = 1000, ...)
+multiscale.localPrune(
+  x,
+  G = bandwidths.default(length(x)),
+  max.unbalance = 4,
+  threshold = c("critical.value", "custom")[1],
+  alpha = 0.1,
+  threshold.function = NULL,
+  criterion = c("eta", "epsilon")[1],
+  eta = 0.4,
+  epsilon = 0.2,
+  rule = c("pval", "jump")[1],
+  penalty = c("log", "polynomial")[1],
+  pen.exp = 1.01,
+  do.confint = FALSE,
+  level = 0.05,
+  N_reps = 1000,
+  ...
+)
 }
 \arguments{
 \item{x}{input data (a \code{numeric} vector or an object of classes \code{ts} and \code{timeSeries})}
@@ -93,6 +105,6 @@ plot(mlp, display = "significance", shaded = "CI", CI = "unif")
 A. Meier, C. Kirch and H. Cho (2019)
 mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
 
-H. Cho and C. Kirch (2019)
-Localised pruning for data segmentation based on multiscale change point procedures. \emph{arXiv preprint arXiv:1910.12486}.
+H. Cho and C. Kirch (2020)
+Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
 }

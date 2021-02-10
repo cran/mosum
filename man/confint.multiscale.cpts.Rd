@@ -4,8 +4,7 @@
 \alias{confint.multiscale.cpts}
 \title{Confidence intervals for change-points}
 \usage{
-\method{confint}{multiscale.cpts}(object, parm = "cpts", level = 0.05,
-  N_reps = 1000, ...)
+\method{confint}{multiscale.cpts}(object, parm = "cpts", level = 0.05, N_reps = 1000, ...)
 }
 \arguments{
 \item{object}{an object of class \code{multiscale.cpts}}

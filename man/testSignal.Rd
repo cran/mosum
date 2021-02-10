@@ -4,8 +4,12 @@
 \alias{testSignal}
 \title{Piecewise constant test signal}
 \usage{
-testSignal(model = c("custom", "blocks", "fms", "mix", "stairs10",
-  "teeth10")[1], lengths = NULL, means = NULL, sds = NULL)
+testSignal(
+  model = c("custom", "blocks", "fms", "mix", "stairs10", "teeth10")[1],
+  lengths = NULL,
+  means = NULL,
+  sds = NULL
+)
 }
 \arguments{
 \item{model}{a string indicating from which model a realisation is to be generated;

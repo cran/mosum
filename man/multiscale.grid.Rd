@@ -4,8 +4,12 @@
 \alias{multiscale.grid}
 \title{Multiscale bandwidth grids}
 \usage{
-multiscale.grid(bandwidths.left, bandwidths.right = bandwidths.left,
-  method = "cartesian", max.unbalance = 4)
+multiscale.grid(
+  bandwidths.left,
+  bandwidths.right = bandwidths.left,
+  method = "cartesian",
+  max.unbalance = 4
+)
 }
 \arguments{
 \item{bandwidths.left}{left parts of the bandwidths}

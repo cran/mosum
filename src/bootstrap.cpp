@@ -9,10 +9,11 @@ using namespace Rcpp;
 double mean_help(NumericVector x, int l, int r) {
   if (l>r) throw std::runtime_error("Expecting l<=r");
   double res = 0.0;
-  for (int t=l; t<=r; ++t) {
+  for (int t = l; t <= r; ++t) {
     res += x[t];
   }
-  res /= ((double)l - (double)r + 1);
+  //'HC: res /= ((double)l - (double)r + 1);
+  res /= ((double)r - (double)l + 1);
   return res;
 }
 
@@ -35,19 +36,22 @@ int get_k_star(NumericVector x_star, // bootstrap replicated ts (of full length 
     if (t < G_l-1) {
       double t_val_help = 0.0;
       const double scaling = std::sqrt(((double)G_l + (double)G_r) / 
-                                       ( (double)(t+1)*(double)(G_l+G_r-t-1) ));
+                                       ( (double)(t + 1)*(double)(G_l + G_r - t - 1) ));
       const double mean_l = mean_help(x_star, 0, G_l+G_r-1);
-      for (int j=0; j<t; ++j) {
+      //'HC: for (int j=0; j <= t; ++j) {
+      for (int j=0; j <= t; ++j) {
         t_val_help += (mean_l - x_star[j]);
       }
       current_val = std::abs(scaling * t_val_help);
     } // right boundary?
     else if (t >= n-G_r) {
       double t_val_help = 0.0;
-      const double scaling = std::sqrt( ((double)G_l + (double)G_r) /
-                                        ( (double)(n-t)*double(n-G_l-G_r+t) ));
+      //'HC: const double scaling = std::sqrt( ((double)G_l + (double)G_r) / ( (double)(n-t)*double(n-G_l-G_r+t) ));
+      const double scaling = std::sqrt(((double)G_l + (double)G_r) /
+                                       ((double)(t + 1 - (n - G_l - G_r))*(double)(n - t - 1)));
       const double mean_r = mean_help(x_star, n-G_l-G_r, n-1);
-      for (int j=n-G_l-G_r; j<n; ++j) {
+      //'HC: for (int j=n-G_l-G_r; j < n; ++j) {
+      for (int j = n - G_l - G_r; j <= t; ++j) {
         t_val_help += (mean_r - x_star[j]);
       }
       current_val = std::abs(scaling * t_val_help);
@@ -63,7 +67,7 @@ int get_k_star(NumericVector x_star, // bootstrap replicated ts (of full length 
       max_pos = t;
     }
   }
-  return max_pos+1; // Recall that R is 1-indexed
+  return max_pos + 1; // Recall that R is 1-indexed
 }
 
 //' Obtain bootstrap replicate of time series

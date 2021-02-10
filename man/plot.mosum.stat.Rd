@@ -4,8 +4,7 @@
 \alias{plot.mosum.stat}
 \title{Plotting MOSUM statistics}
 \usage{
-\method{plot}{mosum.stat}(m, alpha = 0.05, critical.value.col = "blue",
-  xlab = "Time", ...)
+\method{plot}{mosum.stat}(m, alpha = 0.05, critical.value.col = "blue", xlab = "Time", ...)
 }
 \arguments{
 \item{m}{a \code{mosum.stat} object}

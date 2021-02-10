@@ -4,9 +4,16 @@
 \alias{plot.multiscale.cpts}
 \title{Plotting the output from multiscale MOSUM procedure}
 \usage{
-\method{plot}{multiscale.cpts}(x, display = c("data", "significance")[1],
-  shaded = c("CI", "bandwidth", "none")[1], level = 0.05,
-  N_reps = 1000, CI = c("pw", "unif")[1], xlab = "Time", ...)
+\method{plot}{multiscale.cpts}(
+  x,
+  display = c("data", "significance")[1],
+  shaded = c("CI", "bandwidth", "none")[1],
+  level = 0.05,
+  N_reps = 1000,
+  CI = c("pw", "unif")[1],
+  xlab = "Time",
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{multiscale.cpts} object}

@@ -41,7 +41,7 @@ confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, .
     cpts.info[, 1] <- cpts
     cpts.info[, 2] <- G.left
     cpts.info[, 3] <- G.right
-    cpts_bootstrap(cpts.info, N_reps, level, object)
+    cpts_bootstrap(object, N_reps, level)
   }
 }
 
@@ -80,15 +80,16 @@ confint.multiscale.cpts <- function(object, parm='cpts', level=0.05, N_reps=1000
   if (object$do.confint) {
     return(object$ci)
   } else {
-    cpts_bootstrap(object$cpts.info, N_reps, level, object)
+    cpts_bootstrap(object, N_reps, level)
   }
 }
 
 #' Helping/wrapper fuction for C++ calls
 #' @importFrom stats quantile
 #' @keywords internal
-cpts_bootstrap <- function(cpts_info, N_reps, level, mcpts) {
+cpts_bootstrap <- function(mcpts, N_reps, level) {
   x <- mcpts$x
+  cpts_info <- mcpts$cpts.info
   q <- nrow(cpts_info)
   if (q==0) cpts <- pointwise.left <- pointwise.right <- uniform.left <- uniform.right <- integer(0)
   if (q>0) {

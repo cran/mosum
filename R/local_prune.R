@@ -49,8 +49,8 @@
 #' description of the procedure and further details.
 #' @references A. Meier, C. Kirch and H. Cho (2019)
 #' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
-#' @references H. Cho and C. Kirch (2019)
-#' Localised pruning for data segmentation based on multiscale change point procedures. \emph{arXiv preprint arXiv:1910.12486}.
+#' @references H. Cho and C. Kirch (2020)
+#' Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
 #' @examples 
 #' x <- testData(model = "mix", seed = 123)$x
 #' mlp <- multiscale.localPrune(x, G = c(8, 15, 30, 70), do.confint = TRUE)
@@ -62,11 +62,11 @@
 #' @importFrom Rcpp evalCpp
 #' @useDynLib mosum, .registration = TRUE
 #' @export
-multiscale.localPrune <- function(x, G=bandwidths.default(length(x)), max.unbalance = 4,
-                            threshold=c('critical.value', 'custom')[1], alpha=.1, threshold.function = NULL,
-                            criterion=c('eta', 'epsilon')[1], eta=0.4, epsilon=0.2,
-                            rule=c('pval', 'jump')[1], penalty=c('log', 'polynomial')[1], pen.exp=1.01,
-                            do.confint=FALSE, level=0.05, N_reps=1000, ...) {
+multiscale.localPrune <- function(x, G = bandwidths.default(length(x)), max.unbalance = 4,
+                            threshold = c('critical.value', 'custom')[1], alpha = .1, threshold.function = NULL,
+                            criterion = c('eta', 'epsilon')[1], eta = 0.4, epsilon = 0.2,
+                            rule = c('pval', 'jump')[1], penalty = c('log', 'polynomial')[1], pen.exp = 1.01,
+                            do.confint = FALSE, level = 0.05, N_reps = 1000, ...) {
   
   n <- length(x)
   
@@ -96,12 +96,12 @@ multiscale.localPrune <- function(x, G=bandwidths.default(length(x)), max.unbala
     stop('threshold must be either \'critical.value\' or \'custom\'')
   }
   
-  all.cpts <- matrix(NA, ncol=6, nrow=0)
+  all.cpts0 <- matrix(NA, ncol = 6, nrow = 0)
   for (i in seq_len(nrow(grid$grid))) {
     G1 <- grid$grid[[i,1]]
     G2 <- grid$grid[[i,2]]
     if (threshold == 'critical.value') {
-      m <- mosum(x, G=G1, G.right=G2, ...,  
+      m <- mosum(x, G=G1, G.right=G2, ...,
                         threshold='critical.value', alpha=alpha, 
                         criterion=criterion, eta=eta, epsilon=epsilon)
     } else{
@@ -116,28 +116,30 @@ multiscale.localPrune <- function(x, G=bandwidths.default(length(x)), max.unbala
         G1 <- floor(G1*n)
         G2 <- floor(G2*n)
       }
-      all.cpts <- rbind(all.cpts, 
+      all.cpts0 <- rbind(all.cpts0, 
                         cbind(m$cpts, G1, G2, G1+G2,
                               mosum.pValue(m$stat[m$cpts], n, G1, G2), m$stat[m$cpts]*sqrt(G1+G2)/sqrt(G1*G2)))
     }
   }
 
-  all.cpts <- all.cpts[sort(all.cpts[, 1], decreasing=FALSE, index.return=TRUE)$ix,,drop=FALSE]
-  all.cpts <- dup.merge(all.cpts) # if there are duplicates, only select one according to 'rule'
+  all.cpts0 <- all.cpts0[sort(all.cpts0[, 1], decreasing=FALSE, index.return=TRUE)$ix,,drop=FALSE]
+  all.cpts <- dup.merge(all.cpts0) # if there are duplicates, only select one according to 'rule'
   ac <- nrow(all.cpts)
   if(ac > 0){
     lp <- local.prune(x, all.cpts, rule, log.penalty, pen.exp)
-    est.cpts <- lp$est.cpts; est.cpts.ind <- lp$est.cpts.ind; min.cost <- lp$min.cost
+    est.cpts <- lp$est.cpts
+    est.cpts.ind <- detect.interval(all.cpts0, est.cpts) 
+    min.cost <- lp$min.cost
   } else{
     est.cpts.ind <- est.cpts <- integer(0)
     min.cost <- sum(x^2) - n*mean(x)^2
   }
   
-  est.cpts.info <- data.frame(cpts = all.cpts[est.cpts.ind, 1], 
-                          G.left =  all.cpts[est.cpts.ind, 2], 
-                          G.right =  all.cpts[est.cpts.ind, 3],
-                          p.value = all.cpts[est.cpts.ind, 5],
-                          jump = all.cpts[est.cpts.ind, 6])
+  est.cpts.info <- data.frame(cpts = all.cpts0[est.cpts.ind, 1], 
+                          G.left =  all.cpts0[est.cpts.ind, 2], 
+                          G.right =  all.cpts0[est.cpts.ind, 3],
+                          p.value = all.cpts0[est.cpts.ind, 5],
+                          jump = all.cpts0[est.cpts.ind, 6])
   if (log.penalty) {
     penalty_term <- length(est.cpts)*log(n)^pen.exp
   } else {
@@ -172,6 +174,7 @@ multiscale.localPrune <- function(x, G=bandwidths.default(length(x)), max.unbala
 }
 
 #' Localised pruning algorithm
+#' 
 #' @keywords internal
 local.prune <- function(x, all.cpts, rule, log.penalty, pen.exp){
   
@@ -234,6 +237,8 @@ local.prune <- function(x, all.cpts, rule, log.penalty, pen.exp){
     # Too many candidates to do exhaustive search?
     if (length(cand) > THRESH_MANUAL_MERGING) {
       # Count neighbourhood size of neighbours
+      # warn_msg <- paste0('Warning: ', length(cand), ' conflicting candidates')
+      # warning(warn_msg)
       
       cand.rule.seq <- rule.seq[is.element(rule.seq, cand.ind)]
       cand_size <- rep(NA, length(cand))
@@ -278,7 +283,7 @@ local.prune <- function(x, all.cpts, rule, log.penalty, pen.exp){
           # --> Do manual merging, until exhaustive search becomes possible
           while(length(cand) > THRESH_MANUAL_MERGING) {
             warn_msg <- paste0('Warning: ', length(cand), ' conflicting candidates, thinning manually')
-            print(warn_msg) #; warning(warn_msg)
+            warning(warn_msg)
             k <- cand[which.min(diff(cand))]
             l <- which(sub.sums[, 2] == k)
             a <- sub.sums[l, ]; b <- sub.sums[l + 1, ]
@@ -376,6 +381,22 @@ dup.merge <- function(all.cpts) {
     out <- rbind(out, all.cpts[ind.min,])
   }
   out
+}
+
+#' Final detection interval
+#' @keywords internal
+detect.interval <- function(all.cpts, est.cpts) {
+  new.est.cpts.ind <- integer(0)
+  for(k in est.cpts){
+    ind <- which(all.cpts[, 1] == k)
+    ind.min <- ind[all.cpts[ind, 4] == min(all.cpts[ind, 4])]
+    if(length(ind.min) > 1){
+      ind.min <- ind.min[all.cpts[ind.min, 5] == min(all.cpts[ind.min, 5])]
+      if(length(ind.min) > 1) ind.min <- ind.min[which.max(all.cpts[ind.min, 6])]
+    }
+    new.est.cpts.ind <- c(new.est.cpts.ind, ind.min)
+  }
+  new.est.cpts.ind
 }
 
 # dup.merge <- function(all.cpts, rule='jump') {
