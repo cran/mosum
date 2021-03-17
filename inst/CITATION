@@ -1,0 +1,19 @@
+bibentry(bibtype = "Article",
+  title        = "{mosum}: A Package for Moving Sums in Change-Point Analysis",
+  author       = c(person(given = "Alexander",
+                          family = "Meier",
+                          email = "meier.alexander@posteo.de"),
+                   person(given = "Claudia",
+                          family = "Kirch"),
+                   person(given = "Haeran",
+                          family = "Cho")),
+  journal      = "Journal of Statistical Software",
+  year         = "2021",
+  volume       = "97",
+  number       = "8",
+  pages        = "1--42",
+  doi          = "10.18637/jss.v097.i08",
+
+  header       = "To cite mosum in publications use:"
+)
+

@@ -1,12 +1,12 @@
 Package: mosum
 Title: Moving Sum Based Procedures for Changes in the Mean
-Version: 1.2.4
-Date: 2021-02-05
+Version: 1.2.5
+Date: 2021-03-17
 Authors@R: c(
   person("Alexander", "Meier", email = "meier.alexander@posteo.de", role="aut"),
   person("Haeran", "Cho", email = "haeran.cho@bristol.ac.uk", role=c("aut", "cre")),
   person("Claudia", "Kirch", email = "claudia.kirch@ovgu.de", role="aut"))
-Description: Implementations of MOSUM-based statistical procedures and algorithms for detecting multiple changes in the mean. This comprises the MOSUM procedure for estimating multiple mean changes from Eichinger and Kirch (2018) <doi:10.3150/16-BEJ887> and the multiscale algorithmic extensions from Cho and Kirch (2019) <arXiv:1910.12486>. 
+Description: Implementations of MOSUM-based statistical procedures and algorithms for detecting multiple changes in the mean. This comprises the MOSUM procedure for estimating multiple mean changes from Eichinger and Kirch (2018) <doi:10.3150/16-BEJ887> and the multiscale algorithmic extensions from Cho and Kirch (2019) <arXiv:1910.12486>. See Meier, Kirch and Cho (2021) <doi:10.18637/jss.v097.i08> which accompanies the R package.
 Depends: R (>= 3.1.2)
 License: GPL (>= 3)
 LazyData: true
@@ -16,9 +16,9 @@ Maintainer: Haeran Cho <haeran.cho@bristol.ac.uk>
 RoxygenNote: 7.1.1
 Encoding: UTF-8
 NeedsCompilation: yes
-Packaged: 2021-02-05 16:38:42 UTC; mahrc
+Packaged: 2021-03-17 13:22:31 UTC; mahrc
 Author: Alexander Meier [aut],
   Haeran Cho [aut, cre],
   Claudia Kirch [aut]
 Repository: CRAN
-Date/Publication: 2021-02-10 15:30:02 UTC
+Date/Publication: 2021-03-17 16:20:06 UTC

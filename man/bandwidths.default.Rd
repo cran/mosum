@@ -30,8 +30,10 @@ and m satisfying G_m <= \code{G.max} while G_{m+1} > \code{G.max}.
 bandwidths.default(1000, 10, 10, 200)
 }
 \references{
-A. Meier, C. Kirch and H. Cho (2019)
-mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
+A. Meier, C. Kirch and H. Cho (2021)
+mosum: A Package for Moving Sums in Change-point Analysis.
+\emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
+<doi:10.18637/jss.v097.i08>.
 
 H. Cho and C. Kirch (2020)
 Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.

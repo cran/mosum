@@ -47,8 +47,10 @@
 #'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint = TRUE}}
 #' @details See Algorithm 2 in the first referenced paper for a comprehensive
 #' description of the procedure and further details.
-#' @references A. Meier, C. Kirch and H. Cho (2019)
-#' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
+#' @references A. Meier, C. Kirch and H. Cho (2021)
+#' mosum: A Package for Moving Sums in Change-point Analysis.
+#' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
+#' <doi:10.18637/jss.v097.i08>.
 #' @references H. Cho and C. Kirch (2020)
 #' Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
 #' @examples 

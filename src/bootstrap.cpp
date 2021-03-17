@@ -114,8 +114,10 @@ List cpts_bootstrap_help(IntegerMatrix cpts_info,
     d_hat[j] = mean(x_r) - mean(x_l);
     
     const double denominator = std::max(1.0, (double)(r_pos-l_pos-2));
-    const double tau_l = var(x_l) * (double)(x_l.length()-1);
-    const double tau_r = var(x_r) * (double)(x_r.length()-1);
+    double tau_l = 0.0;
+    if(x_l.length() > 1) tau_l = var(x_l) * (double)(x_l.length()-1);
+    double tau_r = 0.0;
+    if(x_r.length() > 1) tau_r = var(x_r) * (double)(x_r.length()-1);
     sigma2_hat[j] = (tau_l + tau_r) / denominator;
   }
   

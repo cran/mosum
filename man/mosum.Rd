@@ -104,8 +104,10 @@ plot(m)
 summary(m)
 }
 \references{
-A. Meier, C. Kirch and H. Cho (2019)
-mosum: A Package for Moving Sums in Change-Point Analysis. \emph{To appear in the Journal of Statistical Software}.
+A. Meier, C. Kirch and H. Cho (2021)
+mosum: A Package for Moving Sums in Change-point Analysis.
+\emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
+<doi:10.18637/jss.v097.i08>.
 
 B. Eichinger and C. Kirch (2018)
 A MOSUM procedure for the estimation of multiple random change-points.

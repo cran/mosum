@@ -9,8 +9,10 @@
 #' with G_0 = G_1 = max(\code{G.min}, 2/3*\code{d.min}), G_{j+1} = G_{j-1} + G_j (for j = 1, ..., m-1)
 #' and m satisfying G_m <= \code{G.max} while G_{m+1} > \code{G.max}.
 #' @return an integer vector of bandwidths
-#' @references A. Meier, C. Kirch and H. Cho (2019)
-#' mosum: A Package for Moving Sums in Change-point Analysis. \emph{To appear in the Journal of Statistical Software}.
+#' @references A. Meier, C. Kirch and H. Cho (2021)
+#' mosum: A Package for Moving Sums in Change-point Analysis.
+#' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
+#' <doi:10.18637/jss.v097.i08>.
 #' @references H. Cho and C. Kirch (2020)
 #' Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
 #' @examples 
