@@ -27,7 +27,7 @@
 #'    \item{rollsums}{a series of MOSUM detector values; equals \code{stat*sqrt(var.estimation)}}
 #'    \item{var.estimation}{the local variance estimated according to \code{var.est.method}}
 #' @details This class only contains the values for the MOSUM statistic.
-#' For statistical evaluation and change-point extraction, use \link[mosum]{mosum}.
+#' For statistical evaluation and change point extraction, use \link[mosum]{mosum}.
 #' See also \link[mosum]{multiscale.bottomUp} and \link[mosum]{multiscale.localPrune}.
 #' @importFrom Rcpp evalCpp
 #' @useDynLib mosum, .registration = TRUE

@@ -42,11 +42,11 @@ a list containing the following entries:
 given as signal + noise}
 \item{mu}{ mean vector of piecewise stationary time series model }
 \item{sigma}{ scaling vector of piecewise stationary time series model }
-\item{cpts}{ a vector of change-points in the piecewise stationary time series model }
+\item{cpts}{ a vector of change points in the piecewise stationary time series model }
 }
 }
 \description{
-Generate piecewise stationary time series with independent innovations and change-points in the mean.
+Generate piecewise stationary time series with independent innovations and change points in the mean.
 }
 \details{
 See Appendix B in the reference for details about the test signals.

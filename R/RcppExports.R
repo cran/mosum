@@ -9,8 +9,8 @@ mean_help <- function(x, l, r) {
 
 #' Compute bootstrapped mosum statistic and return maximum position thereof
 #' @keywords internal
-get_k_star <- function(x_star, k_hat, G_l, G_r) {
-    .Call(`_mosum_get_k_star`, x_star, k_hat, G_l, G_r)
+get_k_star <- function(x_star, k_hat, G_l, G_r, G_ll, G_rr) {
+    .Call(`_mosum_get_k_star`, x_star, k_hat, G_l, G_r, G_ll, G_rr)
 }
 
 #' Obtain bootstrap replicate of time series

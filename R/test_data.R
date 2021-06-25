@@ -1,6 +1,6 @@
 #' Test data with piecewise constant mean
 #' 
-#' Generate piecewise stationary time series with independent innovations and change-points in the mean.
+#' Generate piecewise stationary time series with independent innovations and change points in the mean.
 #' @param model a string indicating from which model a realisation is to be generated;
 #' possible values are "custom" (for user-specified model
 #' using \code{lengths}, \code{means} and \code{sds}), and
@@ -20,7 +20,7 @@
 #' given as signal + noise}
 #' \item{mu}{ mean vector of piecewise stationary time series model }
 #' \item{sigma}{ scaling vector of piecewise stationary time series model }
-#' \item{cpts}{ a vector of change-points in the piecewise stationary time series model }
+#' \item{cpts}{ a vector of change points in the piecewise stationary time series model }
 #' }
 #' @details See Appendix B in the reference for details about the test signals.
 #' @references P. Fryzlewicz (2014)

@@ -16,21 +16,21 @@
 #' @param threshold.function function object of form \code{function(G, length(x), alpha)}, to compute a
 #' threshold of significance for different bandwidths G; use iff \code{threshold = "custom"}
 #' @param eta see \link[mosum]{mosum}
-#' @param do.confint flag indicating whether to compute the confidence intervals for change-points
+#' @param do.confint flag indicating whether to compute the confidence intervals for change points
 #' @param level use iff \code{do.confint = TRUE}; a numeric value (\code{0 <= level <= 1}) with which
 #' \code{100(1-level)\%} confidence interval is generated
 #' @param N_reps use iff \code{do.confint = TRUE}; number of bootstrap replicates to be generated
 #' @param ... further arguments to be passed to the \link[mosum]{mosum} calls
 #' @return S3 object of class \code{multiscale.cpts}, which contains the following fields:
 #'    \item{x}{input data}
-#'    \item{cpts}{estimated change-points}
-#'    \item{cpts.info}{data frame containing information about estimated change-points}
-#'    \item{pooled.cpts}{set of change-point candidates that have been considered by the algorithm}
+#'    \item{cpts}{estimated change points}
+#'    \item{cpts.info}{data frame containing information about estimated change points}
+#'    \item{pooled.cpts}{set of change point candidates that have been considered by the algorithm}
 #'    \item{G}{bandwidths}
 #'    \item{threshold, alpha, threshold.function}{input parameters}
 #'    \item{eta}{input parameters}
 #'    \item{do.confint}{input parameter}
-#'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint = TRUE}}
+#'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change points iff \code{do.confint = TRUE}}
 #' @details See Algorithm 1 in the first referenced paper for a comprehensive
 #' description of the procedure and further details.
 #' @references A. Meier, C. Kirch and H. Cho (2021)
@@ -40,6 +40,7 @@
 #' @references M. Messer et al. (2014)
 #' A multiple filter test for the detection of rate changes in renewal processes with varying variance.
 #' \emph{The Annals of Applied Statistics}, Volume 8, Number 4, pp. 2027-2067.
+#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 #' @examples 
 #' x1 <- testData(lengths = c(100, 200, 300, 300), 
 #' means = c(0, 1, 2, 2.7), sds = rep(1, 4), seed = 123)$x
@@ -92,7 +93,7 @@ multiscale.bottomUp <- function(x, G=bandwidths.default(length(x), G.min = max(2
   stopifnot(eta <= 1 & eta > 0) 
   stopifnot(!do.confint || N_reps>0)
   
-  # Retreive change-point candidates from all bandwidths.
+  # Retreive change point candidates from all bandwidths.
   cpts.complete <- numeric(0)
   bandwidths.complete <- integer(0)
   pValues.complete <- numeric(0)

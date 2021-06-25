@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_prune.R
 \name{print.multiscale.cpts}
 \alias{print.multiscale.cpts}
-\title{Change-points estimated by multiscale MOSUM procedure}
+\title{Change points estimated by multiscale MOSUM procedure}
 \usage{
 \method{print}{multiscale.cpts}(x, ...)
 }

@@ -19,8 +19,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_k_star
-int get_k_star(NumericVector x_star, int k_hat, int G_l, int G_r);
-RcppExport SEXP _mosum_get_k_star(SEXP x_starSEXP, SEXP k_hatSEXP, SEXP G_lSEXP, SEXP G_rSEXP) {
+int get_k_star(NumericVector x_star, int k_hat, int G_l, int G_r, int G_ll, int G_rr);
+RcppExport SEXP _mosum_get_k_star(SEXP x_starSEXP, SEXP k_hatSEXP, SEXP G_lSEXP, SEXP G_rSEXP, SEXP G_llSEXP, SEXP G_rrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -28,7 +28,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type k_hat(k_hatSEXP);
     Rcpp::traits::input_parameter< int >::type G_l(G_lSEXP);
     Rcpp::traits::input_parameter< int >::type G_r(G_rSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_k_star(x_star, k_hat, G_l, G_r));
+    Rcpp::traits::input_parameter< int >::type G_ll(G_llSEXP);
+    Rcpp::traits::input_parameter< int >::type G_rr(G_rrSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_k_star(x_star, k_hat, G_l, G_r, G_ll, G_rr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -207,7 +209,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_mosum_mean_help", (DL_FUNC) &_mosum_mean_help, 3},
-    {"_mosum_get_k_star", (DL_FUNC) &_mosum_get_k_star, 4},
+    {"_mosum_get_k_star", (DL_FUNC) &_mosum_get_k_star, 6},
     {"_mosum_bootstrapped_timeSeries", (DL_FUNC) &_mosum_bootstrapped_timeSeries, 2},
     {"_mosum_cpts_bootstrap_help", (DL_FUNC) &_mosum_cpts_bootstrap_help, 3},
     {"_mosum_get_comb_ind", (DL_FUNC) &_mosum_get_comb_ind, 1},

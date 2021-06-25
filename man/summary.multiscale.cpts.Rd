@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_prune.R
 \name{summary.multiscale.cpts}
 \alias{summary.multiscale.cpts}
-\title{Summary of change-points estimated by multiscale MOSUM procedure}
+\title{Summary of change points estimated by multiscale MOSUM procedure}
 \usage{
 \method{summary}{multiscale.cpts}(object, ...)
 }
@@ -15,7 +15,7 @@
 Summary method for objects of class \code{multiscale.cpts}
 }
 \details{
-Provide information about each estimated change-point, 
+Provide information about each estimated change point, 
 including the bandwidths used for its detection, associated p-value and (scaled) jump size;
 if \code{object$do.confint=TRUE}, end points of the pointwise and uniform confidence intervals
 are also provided.

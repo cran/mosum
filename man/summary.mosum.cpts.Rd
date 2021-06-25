@@ -2,7 +2,7 @@
 % Please edit documentation in R/mosum.R
 \name{summary.mosum.cpts}
 \alias{summary.mosum.cpts}
-\title{Summary of change-points estimated by MOSUM procedure}
+\title{Summary of change points estimated by MOSUM procedure}
 \usage{
 \method{summary}{mosum.cpts}(object, ...)
 }
@@ -15,7 +15,7 @@
 Summary method for objects of class \code{mosum.cpts}
 }
 \details{
-Provide information about each estimated change-point, 
+Provide information about each estimated change point, 
 including the bandwidths used for its estimation, associated p-value and (scaled) jump size;
 if \code{object$do.confint=TRUE}, end points of the pointwise and uniform confidence intervals
 are also provided.

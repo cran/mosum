@@ -4,7 +4,7 @@
 #' @param x input data (a \code{numeric} vector or an object of classes \code{ts} and \code{timeSeries})
 #' @param G a vector of bandwidths, given as either integers less than \code{length(x)/2}, 
 #' or numbers between \code{0} and \code{0.5} describing the moving sum bandwidths relative to \code{length(x)}.
-#' Asymmetric bandwidths obtained as the Cartesian product of the set \code{G} with itself are used for change-point analysis
+#' Asymmetric bandwidths obtained as the Cartesian product of the set \code{G} with itself are used for change point analysis
 #' @param max.unbalance a numeric value for the maximal ratio between maximal and minimal bandwidths to be used for candidate generation,
 #' \code{1 <= max.unbalance <= Inf}
 #' @param threshold string indicating which threshold should be used to determine significance.
@@ -14,9 +14,9 @@
 #' \code{0 <= alpha <= 1}. Use iff \code{threshold = "critical.value"}
 #' @param threshold.function function object of form \code{function(G_l, G_r, length(x), alpha)}, to compute a
 #' threshold of significance for different bandwidths \code{(G_l, G_r)}; use iff \code{threshold = "custom"}
-#' @param criterion how to determine whether an exceeding point is a change-point; to be parsed to \link[mosum]{mosum}
+#' @param criterion how to determine whether an exceeding point is a change point; to be parsed to \link[mosum]{mosum}
 #' @param eta,epsilon see \link[mosum]{mosum}
-#' @param rule string for the choice of sorting criterion for change-point candidates in merging step. 
+#' @param rule string for the choice of sorting criterion for change point candidates in merging step. 
 #' Possible values are: 
 #' \itemize{
 #' \item{\code{"pval"}}{smallest p-value}
@@ -28,23 +28,23 @@
 #' \item{\code{"polynomial"}}{use \code{penalty = length(x)^pen.exp}}
 #' }
 #' @param pen.exp exponent for the penalty term (see \code{penalty});
-#' @param do.confint flag indicating whether confidence intervals for change-points should be computed
+#' @param do.confint flag indicating whether confidence intervals for change points should be computed
 #' @param level use iff \code{do.confint = TRUE}; a numeric value (\code{0 <= level <= 1}) with which
 #' \code{100(1-level)\%} confidence interval is generated
 #' @param N_reps use iff \code{do.confint = TRUE}; number of bootstrap replicates to be generated
 #' @param ... further arguments to be parsed to \link[mosum]{mosum} calls
 #' @return S3 object of class \code{multiscale.cpts}, which contains the following fields:
 #'    \item{x}{input data}
-#'    \item{cpts}{estimated change-points}
-#'    \item{cpts.info}{data frame containing information about estimated change-points}
-#'    \item{sc}{Schwarz criterion values of the estimated change-point set}
-#'    \item{pooled.cpts}{set of change-point candidates that have been considered by the algorithm}
+#'    \item{cpts}{estimated change points}
+#'    \item{cpts.info}{data frame containing information about estimated change points}
+#'    \item{sc}{Schwarz criterion values of the estimated change point set}
+#'    \item{pooled.cpts}{set of change point candidates that have been considered by the algorithm}
 #'    \item{G}{input parameter}
 #'    \item{threshold, alpha, threshold.function}{input parameters}
 #'    \item{criterion, eta, epsilon}{input parameters}
 #'    \item{rule, penalty, pen.exp}{input parameters}
 #'    \item{do.confint}{input parameter}
-#'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint = TRUE}}
+#'    \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change points iff \code{do.confint = TRUE}}
 #' @details See Algorithm 2 in the first referenced paper for a comprehensive
 #' description of the procedure and further details.
 #' @references A. Meier, C. Kirch and H. Cho (2021)
@@ -53,6 +53,7 @@
 #' <doi:10.18637/jss.v097.i08>.
 #' @references H. Cho and C. Kirch (2020)
 #' Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
+#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 #' @examples 
 #' x <- testData(model = "mix", seed = 123)$x
 #' mlp <- multiscale.localPrune(x, G = c(8, 15, 30, 70), do.confint = TRUE)
@@ -289,7 +290,7 @@ local.prune <- function(x, all.cpts, rule, log.penalty, pen.exp){
             k <- cand[which.min(diff(cand))]
             l <- which(sub.sums[, 2] == k)
             a <- sub.sums[l, ]; b <- sub.sums[l + 1, ]
-            # as change-points are merged, the minimum rss in the local environment needs to be updated
+            # as change points are merged, the minimum rss in the local environment needs to be updated
             adj <- adj + (a[2] - a[1] + 1)*(b[2] - b[1] + 1)/(b[2] - a[1] + 1)*(a[3]/(a[2] - a[1] + 1) - b[3]/(b[2] - b[1] + 1))^2
             sub.sums[l + 1, 1] <- a[1]; sub.sums[l + 1, 3:4] <- sub.sums[l + 1, 3:4]+a[3:4]
             sub.sums <- sub.sums[-l,, drop = FALSE]
@@ -419,13 +420,13 @@ detect.interval <- function(all.cpts, est.cpts) {
 #' Plotting method for S3 objects of class "multiscale.cpts".
 #' @method plot multiscale.cpts
 #' @param x a \code{multiscale.cpts} object
-#' @param display which to be plotted against the estimated change-point locations; possible values are
+#' @param display which to be plotted against the estimated change point locations; possible values are
 #' \itemize{
 #'    \item{\code{"data"}}{input time series is plotted along with the estimated piecewise constant signal}
-#'    \item{\code{"significance"}}{one minus the p-values associated with the detection of change-point estimators
+#'    \item{\code{"significance"}}{one minus the p-values associated with the detection of change point estimators
 #'    are represented as the height of vertical lines indicating their locations}
 #' }
-#' @param shaded string indicating which to display as shaded areas surrounding the estimated change-point locations.
+#' @param shaded string indicating which to display as shaded areas surrounding the estimated change point locations.
 #' Poissble values are 
 #' \itemize{
 #'    \item{\code{"bandwidth"}}{respective detection intervals are plotted} 
@@ -438,13 +439,13 @@ detect.interval <- function(all.cpts, est.cpts) {
 #' @param xlab graphical parameter
 #' @param ... not in use
 #' @details
-#' The locations of change-point estimators are plotted 
+#' The locations of change point estimators are plotted 
 #' against the input time series and the estimated piecewise constant signal (\code{display = "data"}), or 
 #' the significance of each estimator is represented by the corresponding
 #' \code{1-p.value} derived from the asymptotic distribution of MOSUM test statistic (\code{display = "significance"}).
 #' It also produces the rectangles representing the 
 #' detection intervals (if \code{shaded = "bandwidth"}) or 
-#' bootstrap confidence intervals of the corresponding change-points (if \code{shaded = "CI"})
+#' bootstrap confidence intervals of the corresponding change points (if \code{shaded = "CI"})
 #' around their locations.
 #' @examples 
 #' x <- testData(model = "blocks", seed = 1234)$x
@@ -460,13 +461,13 @@ plot.multiscale.cpts <- function(x, display = c('data', 'significance')[1],
                                  level=0.05, N_reps=1000, 
                                  CI = c('pw', 'unif')[1], xlab = 'Time', ...) {
   if (shaded=='bandwidth') {
-    main <- 'Change-point estimates and detection intervals'
+    main <- 'Change point estimators and detection intervals'
   } else if (shaded=='CI') {
-    if(CI=='pw') main <- paste('Change-point estimates and pointwise ', 100*(1 - level), '% confidence intervals')
-    if(CI=='unif') main <- paste('Change-point estimates and uniform ', 100*(1 - level), '% confidence intervals')
+    if(CI=='pw') main <- paste('Change point estimators and pointwise ', 100*(1 - level), '% confidence intervals')
+    if(CI=='unif') main <- paste('Change point estimators and uniform ', 100*(1 - level), '% confidence intervals')
     if(length(x$cpts) > 0) if(x$do.confint) b <- x$ci else b <- confint.multiscale.cpts(x, level=level, N_reps=N_reps)
   } else if (shaded == 'none') {
-    main <- 'Change-point estimates'
+    main <- 'Change point estimators'
   } else {
     stop('shaded argument has to be either \'CI\', \'bandwidth\' or \'none\'.')
   }
@@ -535,13 +536,13 @@ plot.multiscale.cpts <- function(x, display = c('data', 'significance')[1],
   }
 }
 
-#' Summary of change-points estimated by multiscale MOSUM procedure
+#' Summary of change points estimated by multiscale MOSUM procedure
 #' 
 #' Summary method for objects of class \code{multiscale.cpts}
 #' @method summary multiscale.cpts
 #' @param object a \code{multiscale.cpts} object
 #' @param ... not in use
-#' @details Provide information about each estimated change-point, 
+#' @details Provide information about each estimated change point, 
 #' including the bandwidths used for its detection, associated p-value and (scaled) jump size;
 #' if \code{object$do.confint=TRUE}, end points of the pointwise and uniform confidence intervals
 #' are also provided.
@@ -559,16 +560,16 @@ summary.multiscale.cpts <- function(object, ...) {
   } 
   if(object$do.confint) ans <- cbind(ans, object$ci$CI[, -1, drop=FALSE])
   #cat(paste('created using mosum version ', utils::packageVersion('mosum'), sep=''))
-  cat(paste('change-points estimated at alpha = ', object$alpha, ' according to ', object$criterion, '-criterion', sep=''))
+  cat(paste('change points detected at alpha = ', object$alpha, ' according to ', object$criterion, '-criterion', sep=''))
   if(object$criterion=='eta') cat(paste('\n with eta = ', object$eta, sep=''))
   if(object$criterion=='epsilon') cat(paste('\n with epsilon = ', object$epsilon, ':', sep=''))
   cat('\n')
   cat('\n')
-  if(length(object$cpts) > 0) print(ans, print.gap = 3) else cat('no change-point is found') 
+  if(length(object$cpts) > 0) print(ans, print.gap = 3) else cat('no change point is found') 
   cat('\n')
 }
 
-#' Change-points estimated by multiscale MOSUM procedure
+#' Change points estimated by multiscale MOSUM procedure
 #' 
 #' Print method for objects of class \code{multiscale.cpts}
 #' @method print multiscale.cpts
@@ -581,7 +582,7 @@ summary.multiscale.cpts <- function(object, ...) {
 #' @export
 print.multiscale.cpts <- function(x, ...) {
   #cat(paste('created using mosum version ', utils::packageVersion('mosum'), sep=''))
-  cat(paste('change-points estimated with bandwidths\n'))
+  cat(paste('change points detected with bandwidths\n'))
   cat('  ')
   cat(x$G)
   cat(paste('\nat alpha = ', x$alpha, ' according to ', x$criterion, '-criterion', sep=''))
@@ -590,6 +591,6 @@ print.multiscale.cpts <- function(x, ...) {
   cat('\n')
   cat('\n')
   cat('  ')
-  if(length(x$cpts)==0) cat('no change-point is found') else cat(x$cpts)
+  if(length(x$cpts)==0) cat('no change point is found') else cat(x$cpts)
   cat('\n')
 }

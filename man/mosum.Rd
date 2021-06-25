@@ -2,7 +2,7 @@
 % Please edit documentation in R/mosum.R
 \name{mosum}
 \alias{mosum}
-\title{MOSUM procedure for multiple change-point estimation}
+\title{MOSUM procedure for multiple change point estimation}
 \usage{
 mosum(
   x,
@@ -59,7 +59,7 @@ Alternatively it is possible to parse a user-defined numerical value with \code{
 use iff \code{threshold = "custom"}}
 
 \item{criterion}{string indicating how to determine whether each point \code{k} at which MOSUM statistic 
-exceeds the threshold is a change-point; possible values are
+exceeds the threshold is a change point; possible values are
 \itemize{
    \item{\code{"eta"}}{there is no larger exceeding in an \code{eta*G} environment of \code{k}}
    \item{\code{"epsilon"}}{\code{k} is the maximum of its local exceeding environment, which has at least size \code{epsilon*G}}
@@ -71,7 +71,7 @@ changes, relative to moving sum bandwidth (iff \code{criterion = "eta"})}
 \item{epsilon}{a numeric value in (0,1] for the minimal size of exceeding
 environments, relative to moving sum bandwidth (iff \code{criterion = "epsilon"})}
 
-\item{do.confint}{flag indicating whether to compute the confidence intervals for change-points}
+\item{do.confint}{flag indicating whether to compute the confidence intervals for change points}
 
 \item{level}{use iff \code{do.confint = TRUE}; a numeric value (\code{0 <= level <= 1}) with which
 \code{100(1-level)\%} confidence interval is generated}
@@ -89,13 +89,13 @@ S3 object of class \code{mosum.cpts}, which contains the following fields:
    \item{threshold, alpha, threshold.custom}{input parameters}
    \item{threshold.value}{threshold value of the corresponding MOSUM test}
    \item{criterion, eta, epsilon}{input parameters}
-   \item{cpts}{a vector containing the estimated change-point locations}
-   \item{cpts.info}{data frame containing information about change-point estimators including detection bandwidths, asymptotic p-values for the corresponding MOSUM statistics and (scaled) size of jumps}
+   \item{cpts}{a vector containing the estimated change point locations}
+   \item{cpts.info}{data frame containing information about change point estimators including detection bandwidths, asymptotic p-values for the corresponding MOSUM statistics and (scaled) size of jumps}
    \item{do.confint}{input parameter}
-   \item{ci}{S3 object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint=TRUE}}
+   \item{ci}{S3 object of class \code{cpts.ci} containing confidence intervals for change points iff \code{do.confint=TRUE}}
 }
 \description{
-Computes the MOSUM detector, detects (multiple) change-points and estimates their locations.
+Computes the MOSUM detector, detects (multiple) change points and estimates their locations.
 }
 \examples{
 x <- testData(lengths = rep(100, 3), means = c(0, 5, -2), sds = rep(1, 3), seed = 1234)$x
@@ -112,4 +112,6 @@ mosum: A Package for Moving Sums in Change-point Analysis.
 B. Eichinger and C. Kirch (2018)
 A MOSUM procedure for the estimation of multiple random change-points.
 \emph{Bernoulli}, Volume 24, Number 1, pp. 526-564.
+
+H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 }

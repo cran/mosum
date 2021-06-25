@@ -4,7 +4,7 @@
 \alias{get_k_star}
 \title{Compute bootstrapped mosum statistic and return maximum position thereof}
 \usage{
-get_k_star(x_star, k_hat, G_l, G_r)
+get_k_star(x_star, k_hat, G_l, G_r, G_ll, G_rr)
 }
 \description{
 Compute bootstrapped mosum statistic and return maximum position thereof

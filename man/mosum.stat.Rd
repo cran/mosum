@@ -52,7 +52,7 @@ Computes the statistical values for the MOSUM test for changes in the mean.
 }
 \details{
 This class only contains the values for the MOSUM statistic.
-For statistical evaluation and change-point extraction, use \link[mosum]{mosum}.
+For statistical evaluation and change point extraction, use \link[mosum]{mosum}.
 See also \link[mosum]{multiscale.bottomUp} and \link[mosum]{multiscale.localPrune}.
 }
 \keyword{internal}

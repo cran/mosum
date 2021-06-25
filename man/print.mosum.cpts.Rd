@@ -2,7 +2,7 @@
 % Please edit documentation in R/mosum.R
 \name{print.mosum.cpts}
 \alias{print.mosum.cpts}
-\title{Change-points estimated by MOSUM procedure}
+\title{Change points estimated by MOSUM procedure}
 \usage{
 \method{print}{mosum.cpts}(x, ...)
 }

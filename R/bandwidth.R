@@ -2,7 +2,7 @@
 #' 
 #' Create bandwidths according to a default function of the sample size
 #' @param n integer representing the sample size
-#' @param d.min integer for the minimal mutual distance of change-points that can be expected
+#' @param d.min integer for the minimal mutual distance of change points that can be expected
 #' @param G.min integer for the minimal allowed bandwidth
 #' @param G.max integer for the maximal allowed bandwidth
 #' @details Returns an integer vector of bandwidths (G_1,...,G_m), 

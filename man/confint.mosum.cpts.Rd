@@ -2,7 +2,7 @@
 % Please edit documentation in R/bootstrap.R
 \name{confint.mosum.cpts}
 \alias{confint.mosum.cpts}
-\title{Confidence intervals for change-points}
+\title{Confidence intervals for change points}
 \usage{
 \method{confint}{mosum.cpts}(object, parm = "cpts", level = 0.05, N_reps = 1000, ...)
 }
@@ -21,14 +21,14 @@
 S3 object of class \code{cpts.ci}, containing the following fields:
    \item{level, N_reps}{input parameters}
    \item{CI}{data frame of five columns, 
-   containing the estimated change-points (column \code{cpts}),
+   containing the estimated change points (column \code{cpts}),
    the pointwise confidence intervals 
    (columns \code{pw.left} and \code{pw.right})
    and the uniform confidence intervals 
-   (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
+   (columns \code{unif.left} and \code{unif.right}) for the corresponding change points}
 }
 \description{
-Generate bootstrap confidence intervals for change-points.
+Generate bootstrap confidence intervals for change points.
 }
 \details{
 See the referenced literature for further details
@@ -44,4 +44,6 @@ A. Meier, C. Kirch and H. Cho (2021)
 mosum: A Package for Moving Sums in Change-point Analysis.
 \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
 <doi:10.18637/jss.v097.i08>.
+
+H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 }

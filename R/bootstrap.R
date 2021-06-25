@@ -1,6 +1,6 @@
-#' Confidence intervals for change-points
+#' Confidence intervals for change points
 #' 
-#' Generate bootstrap confidence intervals for change-points.
+#' Generate bootstrap confidence intervals for change points.
 #' @param object an object of class \code{mosum.cpts}
 #' @param parm specification of which parameters are to be given confidence intervals; \code{parm = "cpts"} is supported
 #' @param level numeric value in (0, 1), such that the \code{100(1-level)\%} confidence bootstrap intervals are computed
@@ -9,16 +9,17 @@
 #' @return S3 object of class \code{cpts.ci}, containing the following fields:
 #'    \item{level, N_reps}{input parameters}
 #'    \item{CI}{data frame of five columns, 
-#'    containing the estimated change-points (column \code{cpts}),
+#'    containing the estimated change points (column \code{cpts}),
 #'    the pointwise confidence intervals 
 #'    (columns \code{pw.left} and \code{pw.right})
 #'    and the uniform confidence intervals 
-#'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
+#'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change points}
 #' @details See the referenced literature for further details
 #' @references A. Meier, C. Kirch and H. Cho (2021)
 #' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
 #' <doi:10.18637/jss.v097.i08>.
+#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
 #' m <- mosum(x, G = 40)
@@ -47,9 +48,9 @@ confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, .
   }
 }
 
-#' Confidence intervals for change-points
+#' Confidence intervals for change points
 #' 
-#' Generate bootstrap confidence intervals for change-points.
+#' Generate bootstrap confidence intervals for change points.
 #' @param object an object of class \code{multiscale.cpts}
 #' @param parm specification of which parameters are to be given confidence intervals; \code{parm = "cpts"} is supported
 #' @param level numeric value in (0, 1), such that the \code{100(1-level)\%} confidence bootstrap intervals are computed
@@ -58,16 +59,17 @@ confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, .
 #' @return S3 object of class \code{cpts.ci}, containing the following fields:
 #'    \item{level, N_reps}{input parameters}
 #'    \item{CI}{data frame of five columns, 
-#'    containing the estimated change-points (column \code{cpts}),
+#'    containing the estimated change points (column \code{cpts}),
 #'    the pointwise confidence intervals 
 #'    (columns \code{pw.left} and \code{pw.right})
 #'    and the uniform confidence intervals 
-#'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change-points}
+#'    (columns \code{unif.left} and \code{unif.right}) for the corresponding change points}
 #' @details See the referenced literature for further details
 #' @references A. Meier, C. Kirch and H. Cho (2021)
 #' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
 #' <doi:10.18637/jss.v097.i08>.
+#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
 #' mlp <-  multiscale.localPrune(x, G = c(8, 15, 30, 70))
@@ -99,16 +101,21 @@ cpts_bootstrap <- function(mcpts, N_reps, level) {
   if (q>0) {
     n <- length(x)
     cpts <- cpts_info[,1]
+    
+    brks <- c(0, cpts, n)
+    spacing <- cbind(diff(brks[-(q + 2)]), diff(brks[-1]))
+    cpts_info <- cbind(cpts_info, pmin(cpts_info[, 2], floor(2/3 * spacing[, 1])), 
+                       pmin(cpts_info[, 3], floor(2/3 * spacing[, 2])))
     # Get bootstrap replicates from C++
     tmp <- cpts_bootstrap_help(as.matrix(cpts_info), x, N_reps)
     k_star <- tmp$k_star
     # Pointwise confidence intervals
-    C_value_j <- apply(abs(tmp$k_star1), 2, quantile, 1-level/2)
+    C_value_j <- apply(abs(tmp$k_star1), 2, quantile, 1 - level)
     pointwise.left <- ceiling(pmax(pmax(1, cpts-cpts_info[, 2]+1), cpts - C_value_j))
     pointwise.right <- floor(pmin(pmin(n, cpts+cpts_info[, 3]), cpts + C_value_j))
     # Uniform confidence intervals
     uCI_help <- apply(abs(tmp$k_star2), 1, max)
-    C_value <- quantile(uCI_help, 1-level)
+    C_value <- quantile(uCI_help, 1 - level)
     uniform.left <- uniform.right <- rep(NA, q)
     for (j in seq_len(q)) {
       uniform.left[j] <- max(max(1, cpts[j] - cpts_info[j, 2]+1),

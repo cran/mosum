@@ -9,7 +9,7 @@ bandwidths.default(n, d.min = 10, G.min = 10, G.max = min(n/2, n^(2/3)))
 \arguments{
 \item{n}{integer representing the sample size}
 
-\item{d.min}{integer for the minimal mutual distance of change-points that can be expected}
+\item{d.min}{integer for the minimal mutual distance of change points that can be expected}
 
 \item{G.min}{integer for the minimal allowed bandwidth}
 

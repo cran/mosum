@@ -18,14 +18,14 @@
 \arguments{
 \item{x}{a \code{multiscale.cpts} object}
 
-\item{display}{which to be plotted against the estimated change-point locations; possible values are
+\item{display}{which to be plotted against the estimated change point locations; possible values are
 \itemize{
    \item{\code{"data"}}{input time series is plotted along with the estimated piecewise constant signal}
-   \item{\code{"significance"}}{one minus the p-values associated with the detection of change-point estimators
+   \item{\code{"significance"}}{one minus the p-values associated with the detection of change point estimators
    are represented as the height of vertical lines indicating their locations}
 }}
 
-\item{shaded}{string indicating which to display as shaded areas surrounding the estimated change-point locations.
+\item{shaded}{string indicating which to display as shaded areas surrounding the estimated change point locations.
 Poissble values are 
 \itemize{
    \item{\code{"bandwidth"}}{respective detection intervals are plotted} 
@@ -46,13 +46,13 @@ are to be plotted; use iff \code{shaded = "CI"}}
 Plotting method for S3 objects of class "multiscale.cpts".
 }
 \details{
-The locations of change-point estimators are plotted 
+The locations of change point estimators are plotted 
 against the input time series and the estimated piecewise constant signal (\code{display = "data"}), or 
 the significance of each estimator is represented by the corresponding
 \code{1-p.value} derived from the asymptotic distribution of MOSUM test statistic (\code{display = "significance"}).
 It also produces the rectangles representing the 
 detection intervals (if \code{shaded = "bandwidth"}) or 
-bootstrap confidence intervals of the corresponding change-points (if \code{shaded = "CI"})
+bootstrap confidence intervals of the corresponding change points (if \code{shaded = "CI"})
 around their locations.
 }
 \examples{

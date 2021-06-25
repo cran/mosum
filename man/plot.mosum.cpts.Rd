@@ -16,14 +16,14 @@
 \arguments{
 \item{x}{a \code{mosum.cpts} object}
 
-\item{display}{which to be plotted against the change-point estimators; possible values are
+\item{display}{which to be plotted against the change point estimators; possible values are
 \itemize{
    \item{\code{"data"}}{input time series is plotted along with the estimated piecewise constant signal}
    \item{\code{"mosum"}}{scaled MOSUM detector values are plotted}
 }}
 
 \item{cpts.col}{a specification for the color of the vertical lines at
-the change-point estimators, see \link[graphics]{par}}
+the change point estimators, see \link[graphics]{par}}
 
 \item{critical.value.col}{a specification for the color of the horizontal line
 indicating the critical value, see \link[graphics]{par}; use iff \code{display = "mosum"}}
@@ -37,7 +37,7 @@ and \link[graphics]{abline}}
 Plotting method for S3 objects of class \code{mosum.cpts}
 }
 \details{
-The location of each change-point estimator is plotted as a vertical line
+The location of each change point estimator is plotted as a vertical line
 against the input time series and the estimated piecewise constant signal (\code{display = "data"})
 or MOSUM detector values (\code{display = "mosum"}).
 }

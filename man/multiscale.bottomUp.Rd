@@ -38,7 +38,7 @@ threshold of significance for different bandwidths G; use iff \code{threshold = 
 
 \item{eta}{see \link[mosum]{mosum}}
 
-\item{do.confint}{flag indicating whether to compute the confidence intervals for change-points}
+\item{do.confint}{flag indicating whether to compute the confidence intervals for change points}
 
 \item{level}{use iff \code{do.confint = TRUE}; a numeric value (\code{0 <= level <= 1}) with which
 \code{100(1-level)\%} confidence interval is generated}
@@ -50,14 +50,14 @@ threshold of significance for different bandwidths G; use iff \code{threshold = 
 \value{
 S3 object of class \code{multiscale.cpts}, which contains the following fields:
    \item{x}{input data}
-   \item{cpts}{estimated change-points}
-   \item{cpts.info}{data frame containing information about estimated change-points}
-   \item{pooled.cpts}{set of change-point candidates that have been considered by the algorithm}
+   \item{cpts}{estimated change points}
+   \item{cpts.info}{data frame containing information about estimated change points}
+   \item{pooled.cpts}{set of change point candidates that have been considered by the algorithm}
    \item{G}{bandwidths}
    \item{threshold, alpha, threshold.function}{input parameters}
    \item{eta}{input parameters}
    \item{do.confint}{input parameter}
-   \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint = TRUE}}
+   \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change points iff \code{do.confint = TRUE}}
 }
 \description{
 Multiscale MOSUM procedure with symmetric bandwidths combined with
@@ -93,4 +93,6 @@ mosum: A Package for Moving Sums in Change-point Analysis.
 M. Messer et al. (2014)
 A multiple filter test for the detection of rate changes in renewal processes with varying variance.
 \emph{The Annals of Applied Statistics}, Volume 8, Number 4, pp. 2027-2067.
+
+H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 }

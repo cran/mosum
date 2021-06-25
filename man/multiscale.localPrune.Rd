@@ -28,7 +28,7 @@ multiscale.localPrune(
 
 \item{G}{a vector of bandwidths, given as either integers less than \code{length(x)/2}, 
 or numbers between \code{0} and \code{0.5} describing the moving sum bandwidths relative to \code{length(x)}.
-Asymmetric bandwidths obtained as the Cartesian product of the set \code{G} with itself are used for change-point analysis}
+Asymmetric bandwidths obtained as the Cartesian product of the set \code{G} with itself are used for change point analysis}
 
 \item{max.unbalance}{a numeric value for the maximal ratio between maximal and minimal bandwidths to be used for candidate generation,
 \code{1 <= max.unbalance <= Inf}}
@@ -43,11 +43,11 @@ Alternatively, it is possible to parse a user-defined function with \code{thresh
 \item{threshold.function}{function object of form \code{function(G_l, G_r, length(x), alpha)}, to compute a
 threshold of significance for different bandwidths \code{(G_l, G_r)}; use iff \code{threshold = "custom"}}
 
-\item{criterion}{how to determine whether an exceeding point is a change-point; to be parsed to \link[mosum]{mosum}}
+\item{criterion}{how to determine whether an exceeding point is a change point; to be parsed to \link[mosum]{mosum}}
 
 \item{eta, epsilon}{see \link[mosum]{mosum}}
 
-\item{rule}{string for the choice of sorting criterion for change-point candidates in merging step. 
+\item{rule}{string for the choice of sorting criterion for change point candidates in merging step. 
 Possible values are: 
 \itemize{
 \item{\code{"pval"}}{smallest p-value}
@@ -62,7 +62,7 @@ Possible values are:
 
 \item{pen.exp}{exponent for the penalty term (see \code{penalty});}
 
-\item{do.confint}{flag indicating whether confidence intervals for change-points should be computed}
+\item{do.confint}{flag indicating whether confidence intervals for change points should be computed}
 
 \item{level}{use iff \code{do.confint = TRUE}; a numeric value (\code{0 <= level <= 1}) with which
 \code{100(1-level)\%} confidence interval is generated}
@@ -74,16 +74,16 @@ Possible values are:
 \value{
 S3 object of class \code{multiscale.cpts}, which contains the following fields:
    \item{x}{input data}
-   \item{cpts}{estimated change-points}
-   \item{cpts.info}{data frame containing information about estimated change-points}
-   \item{sc}{Schwarz criterion values of the estimated change-point set}
-   \item{pooled.cpts}{set of change-point candidates that have been considered by the algorithm}
+   \item{cpts}{estimated change points}
+   \item{cpts.info}{data frame containing information about estimated change points}
+   \item{sc}{Schwarz criterion values of the estimated change point set}
+   \item{pooled.cpts}{set of change point candidates that have been considered by the algorithm}
    \item{G}{input parameter}
    \item{threshold, alpha, threshold.function}{input parameters}
    \item{criterion, eta, epsilon}{input parameters}
    \item{rule, penalty, pen.exp}{input parameters}
    \item{do.confint}{input parameter}
-   \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint = TRUE}}
+   \item{ci}{object of class \code{cpts.ci} containing confidence intervals for change points iff \code{do.confint = TRUE}}
 }
 \description{
 Multiscale MOSUM procedure with (possibly) assymetric bandwidths and localised pruning based on Schwarz criterion.
@@ -109,4 +109,6 @@ mosum: A Package for Moving Sums in Change-point Analysis.
 
 H. Cho and C. Kirch (2020)
 Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
+
+H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 }

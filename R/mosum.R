@@ -1,6 +1,6 @@
-#' MOSUM procedure for multiple change-point estimation
+#' MOSUM procedure for multiple change point estimation
 #' 
-#' Computes the MOSUM detector, detects (multiple) change-points and estimates their locations.
+#' Computes the MOSUM detector, detects (multiple) change points and estimates their locations.
 #' @param x input data (a \code{numeric} vector or an object of classes \code{ts} and \code{timeSeries})
 #' @param G an integer value for the moving sum bandwidth;
 #' \code{G} should be less than \code{length(n)/2}.
@@ -28,7 +28,7 @@
 #' @param threshold.custom a numeric value greater than 0 for the threshold of significance;
 #' use iff \code{threshold = "custom"}
 #' @param criterion string indicating how to determine whether each point \code{k} at which MOSUM statistic 
-#' exceeds the threshold is a change-point; possible values are
+#' exceeds the threshold is a change point; possible values are
 #' \itemize{
 #'    \item{\code{"eta"}}{there is no larger exceeding in an \code{eta*G} environment of \code{k}}
 #'    \item{\code{"epsilon"}}{\code{k} is the maximum of its local exceeding environment, which has at least size \code{epsilon*G}}
@@ -37,7 +37,7 @@
 #' changes, relative to moving sum bandwidth (iff \code{criterion = "eta"})
 #' @param epsilon a numeric value in (0,1] for the minimal size of exceeding
 #' environments, relative to moving sum bandwidth (iff \code{criterion = "epsilon"})
-#' @param do.confint flag indicating whether to compute the confidence intervals for change-points
+#' @param do.confint flag indicating whether to compute the confidence intervals for change points
 #' @param level use iff \code{do.confint = TRUE}; a numeric value (\code{0 <= level <= 1}) with which
 #' \code{100(1-level)\%} confidence interval is generated
 #' @param N_reps use iff \code{do.confint = TRUE}; number of bootstrap replicates to be generated
@@ -51,10 +51,10 @@
 #'    \item{threshold, alpha, threshold.custom}{input parameters}
 #'    \item{threshold.value}{threshold value of the corresponding MOSUM test}
 #'    \item{criterion, eta, epsilon}{input parameters}
-#'    \item{cpts}{a vector containing the estimated change-point locations}
-#'    \item{cpts.info}{data frame containing information about change-point estimators including detection bandwidths, asymptotic p-values for the corresponding MOSUM statistics and (scaled) size of jumps}
+#'    \item{cpts}{a vector containing the estimated change point locations}
+#'    \item{cpts.info}{data frame containing information about change point estimators including detection bandwidths, asymptotic p-values for the corresponding MOSUM statistics and (scaled) size of jumps}
 #'    \item{do.confint}{input parameter}
-#'    \item{ci}{S3 object of class \code{cpts.ci} containing confidence intervals for change-points iff \code{do.confint=TRUE}}
+#'    \item{ci}{S3 object of class \code{cpts.ci} containing confidence intervals for change points iff \code{do.confint=TRUE}}
 #' @references A. Meier, C. Kirch and H. Cho (2021)
 #' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
@@ -62,6 +62,7 @@
 #' @references B. Eichinger and C. Kirch (2018)
 #' A MOSUM procedure for the estimation of multiple random change-points.
 #' \emph{Bernoulli}, Volume 24, Number 1, pp. 526-564.
+#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 5, -2), sds = rep(1, 3), seed = 1234)$x
 #' m <- mosum(x, G = 40)
@@ -128,7 +129,7 @@ mosum <- function(x, G, G.right=G,
         stopifnot(!(lastBeginPoint %in% intervalBeginPoints))
         highestStatPoint <- which.max(m$stat[seq(lastBeginPoint,n-G.right)]) + lastBeginPoint - 1
         if (highestStatPoint-lastBeginPoint >= minIntervalSize/2) {
-          # print(paste0('Found change-point at the right border (G=(', G.left, ',', G.right, ')).'))
+          # print(paste0('Found change point at the right border (G=(', G.left, ',', G.right, ')).'))
           intervalEndPoints <- c(intervalEndPoints, n-G.right)
           intervalBeginPoints <- c(intervalBeginPoints, lastBeginPoint)
         }
@@ -140,7 +141,7 @@ mosum <- function(x, G, G.right=G,
         stopifnot(!(firstEndPoint %in% intervalEndPoints))
         highestStatPoint <- which.max(m$stat[seq(G.left,firstEndPoint)]) + G.left - 1
         if (firstEndPoint - highestStatPoint >= minIntervalSize/2) {
-          # print(paste0('Found change-point at the left border (G=(', G.left, ',', G.right, ')).'))
+          # print(paste0('Found change point at the left border (G=(', G.left, ',', G.right, ')).'))
           intervalEndPoints <- c(firstEndPoint, intervalEndPoints)
           intervalBeginPoints <- c(G.left, intervalBeginPoints)
         }
@@ -202,20 +203,20 @@ mosum <- function(x, G, G.right=G,
 #' Plotting method for S3 objects of class \code{mosum.cpts}
 #' @method plot mosum.cpts
 #' @param x a \code{mosum.cpts} object
-#' @param display which to be plotted against the change-point estimators; possible values are
+#' @param display which to be plotted against the change point estimators; possible values are
 #' \itemize{
 #'    \item{\code{"data"}}{input time series is plotted along with the estimated piecewise constant signal}
 #'    \item{\code{"mosum"}}{scaled MOSUM detector values are plotted}
 #' }
 #' @param cpts.col a specification for the color of the vertical lines at
-#' the change-point estimators, see \link[graphics]{par}
+#' the change point estimators, see \link[graphics]{par}
 #' @param critical.value.col a specification for the color of the horizontal line
 #' indicating the critical value, see \link[graphics]{par}; use iff \code{display = "mosum"}
 #' @param xlab graphical parameter
 #' @param ... additional graphical arguments, see \link[graphics]{plot}
 #' and \link[graphics]{abline}
 #' @details 
-#' The location of each change-point estimator is plotted as a vertical line
+#' The location of each change point estimator is plotted as a vertical line
 #' against the input time series and the estimated piecewise constant signal (\code{display = "data"})
 #' or MOSUM detector values (\code{display = "mosum"}).
 #' @examples 
@@ -253,13 +254,13 @@ plot.mosum.cpts <- function(x, display=c('data', 'mosum')[1], cpts.col='red', cr
   }
 }
 
-#' Summary of change-points estimated by MOSUM procedure
+#' Summary of change points estimated by MOSUM procedure
 #' 
 #' Summary method for objects of class \code{mosum.cpts}
 #' @method summary mosum.cpts
 #' @param object a \code{mosum.cpts} object
 #' @param ... not in use
-#' @details Provide information about each estimated change-point, 
+#' @details Provide information about each estimated change point, 
 #' including the bandwidths used for its estimation, associated p-value and (scaled) jump size;
 #' if \code{object$do.confint=TRUE}, end points of the pointwise and uniform confidence intervals
 #' are also provided.
@@ -278,17 +279,17 @@ summary.mosum.cpts <- function(object, ...) {
   if(object$do.confint) ans <- cbind(ans, object$ci$CI[, -1, drop=FALSE])
 
 #  cat(paste('created using mosum version ', utils::packageVersion('mosum'), sep=''))
-  cat(paste('change-points estimated at alpha = ', object$alpha, ' according to ', object$criterion, '-criterion', sep=''))
+  cat(paste('change points detected at alpha = ', object$alpha, ' according to ', object$criterion, '-criterion', sep=''))
   if(object$criterion=='eta') cat(paste('\n with eta = ', object$eta, sep=''))
   if(object$criterion=='epsilon') cat(paste('\n with epsilon = ', object$epsilon, sep=''))
   cat(paste(' and ', object$var.est.method, ' variance estimate:', sep=''))
   cat('\n')
   cat('\n')
-  if(length(object$cpts) > 0) print(ans, print.gap = 3) else cat('no change-point is found') 
+  if(length(object$cpts) > 0) print(ans, print.gap = 3) else cat('no change point is found') 
   cat('\n')
 }
 
-#' Change-points estimated by MOSUM procedure
+#' Change points estimated by MOSUM procedure
 #' 
 #' Print method for objects of class \code{mosum.cpts}
 #' @method print mosum.cpts
@@ -301,7 +302,7 @@ summary.mosum.cpts <- function(object, ...) {
 #' @export
 print.mosum.cpts <- function(x, ...) {
   #cat(paste('created using mosum version ', utils::packageVersion('mosum'), sep=''))
-  cat(paste('change-points estimated with bandwidths (', x$G.left, ', ', x$G.right, ')', 
+  cat(paste('change points detected with bandwidths (', x$G.left, ', ', x$G.right, ')', 
             ' at alpha = ', x$alpha, sep='')) 
   cat(paste('\n according to ', x$criterion, '-criterion', sep=''))
   if(x$criterion=='eta') cat(paste(' with eta = ', x$eta, sep=''))
@@ -310,6 +311,6 @@ print.mosum.cpts <- function(x, ...) {
   cat('\n')
   cat('\n')
   cat('  ')
-  if(length(x$cpts)==0) cat('no change-point is found') else cat(x$cpts)
+  if(length(x$cpts)==0) cat('no change point is found') else cat(x$cpts)
   cat('\n')
 }
