@@ -62,7 +62,7 @@
 #' @references B. Eichinger and C. Kirch (2018)
 #' A MOSUM procedure for the estimation of multiple random change-points.
 #' \emph{Bernoulli}, Volume 24, Number 1, pp. 526-564.
-#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
+#' @references H. Cho and C. Kirch (2022) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{Computational Statistics & Data Analysis}, Volume 175, pp. 107552.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 5, -2), sds = rep(1, 3), seed = 1234)$x
 #' m <- mosum(x, G = 40)
@@ -226,11 +226,12 @@ mosum <- function(x, G, G.right=G,
 #' plot(m, display = "data")
 #' plot(m, display = "mosum")
 #' @importFrom graphics abline lines plot
+#' @importFrom methods is
 #' @export
 plot.mosum.cpts <- function(x, display=c('data', 'mosum')[1], cpts.col='red', critical.value.col='blue', xlab='Time', ...) {
-  if (class(x$x)=='ts') {
+  if (is(x$x, 'ts')) {
     x_plot <- as.numeric(time(x$x))
-  } else if(class(x$x) == 'timeSeries') {
+  } else if(is(x$x, 'timeSeries')) {
     x_plot <- time(x$x)
   } else {
     x_plot <- seq_len(length(x$x))

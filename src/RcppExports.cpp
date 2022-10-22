@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // mean_help
 double mean_help(NumericVector x, int l, int r);
 RcppExport SEXP _mosum_mean_help(SEXP xSEXP, SEXP lSEXP, SEXP rSEXP) {

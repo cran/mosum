@@ -19,7 +19,7 @@
 #' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
 #' <doi:10.18637/jss.v097.i08>.
-#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
+#' @references H. Cho and C. Kirch (2022) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{Computational Statistics & Data Analysis}, Volume 175, pp. 107552.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
 #' m <- mosum(x, G = 40)
@@ -27,11 +27,12 @@
 #' print(ci$CI)
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats confint
+#' @importFrom methods is
 #' @useDynLib mosum, .registration = TRUE
 #' @method confint mosum.cpts
 #' @export
 confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, ...) {
-  stopifnot(class(object) == 'mosum.cpts')
+  stopifnot(is(object, 'mosum.cpts'))
   stopifnot(parm=='cpts')
   if (object$do.confint) {
     return(object$ci)
@@ -69,7 +70,7 @@ confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, .
 #' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
 #' <doi:10.18637/jss.v097.i08>.
-#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
+#' @references H. Cho and C. Kirch (2022) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{Computational Statistics & Data Analysis}, Volume 175, pp. 107552.
 #' @examples 
 #' x <- testData(lengths = rep(100, 3), means = c(0, 3, 1), sds = rep(1, 3), seed = 1337)$x
 #' mlp <-  multiscale.localPrune(x, G = c(8, 15, 30, 70))
@@ -77,11 +78,12 @@ confint.mosum.cpts <- function(object, parm = "cpts", level=0.05, N_reps=1000, .
 #' print(ci$CI)
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats confint
+#' @importFrom methods is
 #' @useDynLib mosum, .registration = TRUE
 #' @method confint multiscale.cpts
 #' @export
 confint.multiscale.cpts <- function(object, parm='cpts', level=0.05, N_reps=1000, ...) {
-  stopifnot(class(object)=='multiscale.cpts')
+  stopifnot(is(object, 'multiscale.cpts'))
   stopifnot(parm=='cpts')
   if (object$do.confint) {
     return(object$ci)

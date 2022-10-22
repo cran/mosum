@@ -40,7 +40,7 @@
 #' @references M. Messer et al. (2014)
 #' A multiple filter test for the detection of rate changes in renewal processes with varying variance.
 #' \emph{The Annals of Applied Statistics}, Volume 8, Number 4, pp. 2027-2067.
-#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
+#' @references H. Cho and C. Kirch (2022) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{Computational Statistics & Data Analysis}, Volume 175, pp. 107552.
 #' @examples 
 #' x1 <- testData(lengths = c(100, 200, 300, 300), 
 #' means = c(0, 1, 2, 2.7), sds = rep(1, 4), seed = 123)$x
@@ -58,6 +58,7 @@
 #' summary(mbu2)
 #' 
 #' @importFrom Rcpp evalCpp
+#' @importFrom methods is
 #' @useDynLib mosum, .registration = TRUE
 #' @export
 multiscale.bottomUp <- function(x, G=bandwidths.default(length(x), G.min = max(20, ceiling(0.05*length(x)))), 
@@ -66,9 +67,9 @@ multiscale.bottomUp <- function(x, G=bandwidths.default(length(x), G.min = max(2
                                 do.confint=FALSE, level=0.05, N_reps=1000, ...) {
   n <- length(x)
 
-  if (class(G) == 'integer' || class(G) == 'numeric') {
+  if (is(G, 'integer') || is(G, 'numeric')) {
     grid <- multiscale.grid(G, method='concatenate')
-   } else if (class(G) == 'multiscale.grid'){
+   } else if (is(G, 'multiscale.grid')){
     if (any(apply(G$grid, 1, diff) != 0)) {
       stop("Expecting a grid of symmetric bandwidths")
     }

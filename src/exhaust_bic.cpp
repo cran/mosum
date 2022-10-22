@@ -266,7 +266,7 @@ List exhaust_sc(const IntegerVector &cand,
     l -= 1;
   }
   
-  if((cost_vals[0]!=INF) & flag[0]) {
+  if((cost_vals[0]!=INF) && flag[0]) {
     final.push_back(0);
     m_star = 0;
   }
@@ -287,7 +287,7 @@ List exhaust_sc(const IntegerVector &cand,
   unsigned left, right, j, jj;
   for (unsigned i = 0; i < final.size(); i++) {
     j = final[i];
-    if ((num_cpts[j] >= m_star) & (num_cpts[j] <= m_star + 2)){
+    if ((num_cpts[j] >= m_star) && (num_cpts[j] <= m_star + 2)){
       if(sc_vals[j] < min_sc){
         min_sc = sc_vals[j];
         final_ind_star = j;    

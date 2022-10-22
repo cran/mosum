@@ -162,10 +162,11 @@ mosum.stat <- function(x, G, G.right=NA, var.est.method='mosum',
 #' @param xlab graphical parameter
 #' @param ... additional graphical arguments, see \link[graphics]{plot}
 #' @importFrom stats plot.ts time
+#' @importFrom methods is
 #' @keywords internal
 plot.mosum.stat <- function(m, alpha=0.05, critical.value.col='blue', 
                        xlab='Time', ...) {
-  if (class(m$x)=='ts') {
+  if (is(m$x, 'ts')) {
     x_plot <- as.numeric(time(m$x))
   } else {
     x_plot <- seq_len(length(m$x))

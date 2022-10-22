@@ -51,9 +51,8 @@
 #' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
 #' <doi:10.18637/jss.v097.i08>.
-#' @references H. Cho and C. Kirch (2020)
-#' Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
-#' @references H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
+#' @references H. Cho and C. Kirch (2022) Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{Annals of the Institute of Statistical Mathematics}, Volume 74, Number 4, pp. 653-684.
+#' @references H. Cho and C. Kirch (2022) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{Computational Statistics & Data Analysis}, Volume 175, pp. 107552.
 #' @examples 
 #' x <- testData(model = "mix", seed = 123)$x
 #' mlp <- multiscale.localPrune(x, G = c(8, 15, 30, 70), do.confint = TRUE)
@@ -63,6 +62,7 @@
 #' plot(mlp, display = "data", shaded = "none")
 #' plot(mlp, display = "significance", shaded = "CI", CI = "unif")
 #' @importFrom Rcpp evalCpp
+#' @importFrom methods is
 #' @useDynLib mosum, .registration = TRUE
 #' @export
 multiscale.localPrune <- function(x, G = bandwidths.default(length(x)), max.unbalance = 4,
@@ -73,9 +73,9 @@ multiscale.localPrune <- function(x, G = bandwidths.default(length(x)), max.unba
   
   n <- length(x)
   
-  if (class(G) == "integer" || class(G) == "numeric") {
+  if (is(G, 'integer') || is(G, 'numeric')) {
     grid <- multiscale.grid(G, max.unbalance = max.unbalance)
-  } else if(class(G) == 'multiscale.grid'){
+  } else if (is(G, 'multiscale.grid')){
     grid <- G
   } else stop('Expecting a vector of numbers')
   abs.bandwidth <- all(grid$grid>=1)
@@ -472,9 +472,9 @@ plot.multiscale.cpts <- function(x, display = c('data', 'significance')[1],
     stop('shaded argument has to be either \'CI\', \'bandwidth\' or \'none\'.')
   }
   n <- length(x$x)
-  if (class(x$x)=='ts') {
+  if (is(x$x, 'ts')) {
     x_plot <- as.numeric(time(x$x))
-  } else if(class(x$x)=='timeSeries') {
+  } else if(is(x$x, 'timeSeries')) {
     x_plot <- time(x$x)
   } else {
     x_plot <- seq_len(length(x$x))

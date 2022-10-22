@@ -113,5 +113,5 @@ B. Eichinger and C. Kirch (2018)
 A MOSUM procedure for the estimation of multiple random change-points.
 \emph{Bernoulli}, Volume 24, Number 1, pp. 526-564.
 
-H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
+H. Cho and C. Kirch (2022) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{Computational Statistics & Data Analysis}, Volume 175, pp. 107552.
 }

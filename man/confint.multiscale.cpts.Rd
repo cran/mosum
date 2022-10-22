@@ -45,5 +45,5 @@ mosum: A Package for Moving Sums in Change-point Analysis.
 \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
 <doi:10.18637/jss.v097.i08>.
 
-H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
+H. Cho and C. Kirch (2022) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{Computational Statistics & Data Analysis}, Volume 175, pp. 107552.
 }

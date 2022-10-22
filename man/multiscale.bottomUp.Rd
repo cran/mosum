@@ -94,5 +94,5 @@ M. Messer et al. (2014)
 A multiple filter test for the detection of rate changes in renewal processes with varying variance.
 \emph{The Annals of Applied Statistics}, Volume 8, Number 4, pp. 2027-2067.
 
-H. Cho and C. Kirch (2021) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{arXiv preprint arXiv:2106.12844}.
+H. Cho and C. Kirch (2022) Bootstrap confidence intervals for multiple change points based on moving sum procedures. \emph{Computational Statistics & Data Analysis}, Volume 175, pp. 107552.
 }

@@ -13,8 +13,7 @@
 #' mosum: A Package for Moving Sums in Change-point Analysis.
 #' \emph{Journal of Statistical Software}, Volume 97, Number 8, pp. 1-42.
 #' <doi:10.18637/jss.v097.i08>.
-#' @references H. Cho and C. Kirch (2020)
-#' Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{arXiv preprint arXiv:1910.12486}.
+#' @references H. Cho and C. Kirch (2022) Two-stage data segmentation permitting multiscale change points, heavy tails and dependence. \emph{Annals of the Institute of Statistical Mathematics}, Volume 74, Number 4, pp. 653-684.
 #' @examples 
 #' bandwidths.default(1000, 10, 10, 200)
 #' @export

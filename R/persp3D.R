@@ -42,6 +42,7 @@
 #' }
 #' @importFrom plot3D persp3D
 #' @importFrom RColorBrewer brewer.pal brewer.pal.info
+#' @importFrom methods is
 #' @export
 persp3D.multiscaleMosum <- function(x, mosum.args=list(), 
                                     threshold = c('critical.value', 'custom')[1],
@@ -61,7 +62,7 @@ persp3D.multiscaleMosum <- function(x, mosum.args=list(),
   n <- length(x)
   G <- 8:floor(3*sqrt(n))
   
-  if (class(G) == 'integer' || class(G) == 'numeric') {
+  if (is(G, 'integer') || is(G, 'numeric')) {
     grid <- multiscale.grid(G, method='concatenate')
   } else stop('Expecting a vector of numbers')
 
